@@ -1,0 +1,7 @@
+src: src/index.jade
+dest: public/
+
+cache: true
+
+pipeline:
+  jade:

@@ -1,0 +1,24 @@
+h2.md-title A l'affiche
+p.md-subhead {{ theater.name }}
+
+md-grid-list(md-cols-xs='1', md-cols-sm='2', md-cols-md='4', md-cols-gt-md='6', md-row-height-gt-md='3:4', md-row-height='3:4', md-gutter='12px', md-gutter-gt-sm='8px')
+  md-grid-tile(ng-repeat="showtime in showtimes")
+    img(src="{{ showtime.onShow.movie.poster.href }}" width="100%" height="100%")
+    md-grid-tile-footer
+      h3 {{ showtime.onShow.movie.title }}
+
+//- md-list
+//-   md-list-item(ng-repeat="showtime in showtimes")
+//-     h3 
+//-     p {{ showtime.onShow.movie.castingShort.directors }}
+//-     p {{ showtime.onShow.movie.castingShort.actors }}
+//-     p {{ showtime.onShow.movie.release.releaseDate }}
+//-     p {{ showtime.onShow.movie.genre[0].$ }}
+//-     img(src="{{ showtime.onShow.movie.poster.href }}" style="width: 100px;")
+//-     a(href="{{ showtime.onShow.movie.trailer.href }}" target="_blank") Trailer
+//-     a(href="{{ showtime.onShow.movie.link.href }}" target="_blank") Lien AlloCine
+//-     p
+//-       | Presse: {{ showtime.onShow.movie.statistics.pressRating }} ({{ showtime.onShow.movie.statistics.pressReviewCount }})
+//-       | Utilisateurs: {{ showtime.onShow.movie.statistics.userRating }} ({{ showtime.onShow.movie.statistics.userReviewCount }}, {{ showtime.onShow.movie.statistics.userRatingCount }})
+//-     p {{ showtime.version.$ }} {{ versionLabel[showtime.version.original] }}
+//-     p {{ showtime.display }}
