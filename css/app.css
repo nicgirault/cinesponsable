@@ -2,3 +2,6 @@ md-grid-list md-grid-tile md-grid-tile-footer,
 md-grid-list md-grid-tile md-grid-tile-header {
   background: rgba(0, 0, 0, 0.6);
 }
+.angular-google-map-container {
+  height: 600px;
+}

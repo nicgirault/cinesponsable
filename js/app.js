@@ -8,7 +8,7 @@ angular.module('Cinesponsable', ['ng', 'ngResource', 'ngAnimate', 'ngMaterial', 
   return $urlRouterProvider.otherwise('/map');
 }).config(function(uiGmapGoogleMapApiProvider) {
   return uiGmapGoogleMapApiProvider.configure({
-    v: '3.20',
+    v: '3.21',
     libraries: ''
   });
 });
@@ -62,24 +62,38 @@ angular.module('Cinesponsable.alloCine').service('AlloCine', function($resource,
 angular.module('Cinesponsable.common').config(function($stateProvider) {
   return $stateProvider.state('base', {
     templateUrl: 'common/states/base/view.html',
+    controller: 'BaseCtrl',
     abstract: true
   });
 });
 
 angular.module('Cinesponsable.map').config(function($stateProvider) {
-  return $stateProvider.state('map', {
+  return $stateProvider.state('base.map', {
     url: '/map',
     templateUrl: 'map/states/main/view.html',
     controller: 'MapCtrl',
+    data: {
+      tab: 'map'
+    },
     resolve: {
-      theaters: function(Theater, AlloCine) {
+      theaters: function(Theater, AlloCine, $q) {
         return Theater.query().then(function(theaters) {
-          var theater, _i, _len;
+          var promises, theater, _i, _len;
+          promises = [];
           for (_i = 0, _len = theaters.length; _i < _len; _i++) {
             theater = theaters[_i];
-            AlloCine.getTheaterInfo(theater);
+            promises.push(AlloCine.getTheaterInfo(theater));
           }
-          return theaters;
+          return $q.all(promises).then(function(completedTheaters) {
+            _.each(completedTheaters, function(theater) {
+              var _ref, _ref1;
+              return theater.geoloc = {
+                latitude: (_ref = theater.geoloc) != null ? _ref.lat : void 0,
+                longitude: (_ref1 = theater.geoloc) != null ? _ref1.long : void 0
+              };
+            });
+            return completedTheaters;
+          });
         });
       }
     }
@@ -91,6 +105,9 @@ angular.module('Cinesponsable.showtime').config(function($stateProvider) {
     url: '/theater/:theaterId/showtime',
     templateUrl: 'showtime/states/theater-showtime/view.html',
     controller: 'ShowtimeCtrl',
+    data: {
+      tab: 'theaters'
+    },
     resolve: {
       showtimes: function(Theater, AlloCine, $stateParams) {
         if ($stateParams.theaterId == null) {
@@ -122,6 +139,9 @@ angular.module('Cinesponsable.theater').config(function($stateProvider) {
     url: '/theaters',
     templateUrl: 'theater/states/list/view.html',
     controller: 'TheaterListCtrl',
+    data: {
+      tab: 'theaters'
+    },
     resolve: {
       theaters: function(Theater, AlloCine) {
         return Theater.query().then(function(theaters) {
@@ -156,17 +176,31 @@ angular.module('Cinesponsable.theater').factory('Theater', function(Parse) {
   })(Parse.Model);
 });
 
+angular.module('Cinesponsable.common').controller('BaseCtrl', function($scope, $state) {
+  $scope.state = $state;
+  return console.log($state.current);
+});
+
 angular.module('Cinesponsable.map').controller('MapCtrl', function($scope, theaters, uiGmapGoogleMapApi) {
   $scope.theaters = theaters;
-  return uiGmapGoogleMapApi.then(function(maps) {
+  uiGmapGoogleMapApi.then(function(maps) {
     return $scope.map = {
       center: {
-        latitude: 45,
-        longitude: -73
+        latitude: 48.858181,
+        longitude: 2.335000
       },
-      zoom: 8
+      zoom: 13
     };
   });
+  return $scope.events = {
+    dragend: function(maps, eventName, args) {
+      var newCenter;
+      return newCenter = {
+        latitude: maps.center.A,
+        longitude: maps.center.F
+      };
+    }
+  };
 });
 
 angular.module('Cinesponsable.showtime').controller('ShowtimeCtrl', function($scope, theater, showtimes) {
