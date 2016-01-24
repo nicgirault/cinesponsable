@@ -1,8 +1,0 @@
-md-list
-  md-list-item.md-2-line(
-    ng-repeat="theater in theaters"
-  )
-    md-button.md-no-style.md-ink-ripple(ng-click="showtime(theater)" aria-label="theater")
-      .md-list-item-text
-        h3 {{ theater.name }}
-        p {{ theater.address }} {{ theater.postalCode }} {{ theater.city }}
