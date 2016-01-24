@@ -1,7 +1,7 @@
-.container(style="width: 500px; height: 500px;")
-  ui-gmap-google-map(center='map.center' zoom='map.zoom')
+div(flex="100")
+  ui-gmap-google-map(center='map.center' zoom='map.zoom' events='events')
     ui-gmap-marker(
       ng-repeat='theater in theaters'
-      idKey='theater.code'
+      idKey='theater.alloCineId'
       coords='theater.geoloc'
     )

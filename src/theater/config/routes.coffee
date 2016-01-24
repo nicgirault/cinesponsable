@@ -5,6 +5,8 @@ angular.module 'Cinesponsable.theater'
     url: '/theaters'
     templateUrl: 'theater/states/list/view.html'
     controller: 'TheaterListCtrl'
+    data:
+      tab: 'theaters'
     resolve:
       theaters: (Theater, AlloCine) ->
         Theater.query()

@@ -3,14 +3,23 @@ angular.module 'Cinesponsable.map'
   $stateProvider
 ) ->
   $stateProvider
-  .state 'map',
+  .state 'base.map',
     url: '/map'
     templateUrl: 'map/states/main/view.html'
     controller: 'MapCtrl'
+    data:
+      tab: 'map'
     resolve:
-      theaters: (Theater, AlloCine) ->
+      theaters: (Theater, AlloCine, $q) ->
         Theater.query()
         .then (theaters) ->
+          promises = []
           for theater in theaters
-            AlloCine.getTheaterInfo theater
-          theaters
+            promises.push AlloCine.getTheaterInfo theater
+          $q.all promises
+          .then (completedTheaters) ->
+            _.each completedTheaters, (theater) ->
+              theater.geoloc =
+                latitude: theater.geoloc?.lat
+                longitude: theater.geoloc?.long
+            completedTheaters

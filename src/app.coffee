@@ -42,6 +42,6 @@ angular.module 'Cinesponsable', [
 .config (uiGmapGoogleMapApiProvider) ->
   uiGmapGoogleMapApiProvider.configure {
       #key: 'AIzaSyDXUwacxRBdrqDyJ0x7kqqD9DuvVxJjngI'
-      v: '3.20'
+      v: '3.21'
       libraries: ''
     }
