@@ -24,27 +24,26 @@ angular.module('Cinesponsable.showtime', []);
 angular.module('Cinesponsable.theater', []);
 
 angular.module('Cinesponsable.alloCine').service('AlloCine', function($resource, ALLOCINE_API_URL, ALLOCINE_PARTNER_TOKEN) {
-  var AlloCineTheater;
-  AlloCineTheater = $resource(ALLOCINE_API_URL + '/showtimelist?partner=:partner&format=json&theaters=:alloCineId');
+  var AlloCineShowTime, AlloCineTheater;
+  AlloCineShowTime = $resource(ALLOCINE_API_URL + '/showtimelist?partner=:partner&format=json&theaters=:alloCineId');
+  AlloCineTheater = $resource(ALLOCINE_API_URL + '/theaterlist?partner=:partner&format=json&theaters=:alloCineId');
   return {
-    getTheaterInfo: function(theater) {
+    getTheaterInfo: function(code) {
       return AlloCineTheater.get({
         partner: ALLOCINE_PARTNER_TOKEN,
-        alloCineId: theater.alloCineId
+        alloCineId: code
       }).$promise.then(function(data) {
-        var place, _ref, _ref1, _ref2, _ref3;
-        if (data.feed) {
-          place = (_ref = data.feed.theaterShowtimes[0]) != null ? (_ref1 = _ref.place) != null ? _ref1.theater : void 0 : void 0;
-          theater.name = place != null ? place.name : void 0;
-          theater.address = place != null ? place.address : void 0;
-          theater.postalCode = place != null ? place.postalCode : void 0;
-          theater.city = place != null ? place.city : void 0;
-          theater.picture = place != null ? (_ref2 = place.picture) != null ? _ref2.href : void 0 : void 0;
-          theater.allocineLink = place != null ? (_ref3 = place.link[0]) != null ? _ref3.href : void 0 : void 0;
-          theater.geoloc = place != null ? place.geoloc : void 0;
-          theater.area = place != null ? place.area : void 0;
+        var result, _ref, _ref1;
+        result = null;
+        if (_.isArray((_ref = data.feed) != null ? _ref.theater : void 0)) {
+          result = _.find((_ref1 = data.feed) != null ? _ref1.theater : void 0, {
+            code: code
+          });
+          if (result != null) {
+            result.alloCineId = code;
+          }
         }
-        return theater;
+        return result;
       });
     },
     getShowtimes: function(alloCineId) {
@@ -77,24 +76,7 @@ angular.module('Cinesponsable.map').config(function($stateProvider) {
     },
     resolve: {
       theaters: function(Theater, AlloCine, $q) {
-        return Theater.query().then(function(theaters) {
-          var promises, theater, _i, _len;
-          promises = [];
-          for (_i = 0, _len = theaters.length; _i < _len; _i++) {
-            theater = theaters[_i];
-            promises.push(AlloCine.getTheaterInfo(theater));
-          }
-          return $q.all(promises).then(function(completedTheaters) {
-            _.each(completedTheaters, function(theater) {
-              var _ref, _ref1;
-              return theater.geoloc = {
-                latitude: (_ref = theater.geoloc) != null ? _ref.lat : void 0,
-                longitude: (_ref1 = theater.geoloc) != null ? _ref1.long : void 0
-              };
-            });
-            return completedTheaters;
-          });
-        });
+        return Theater.query();
       }
     }
   });
@@ -143,15 +125,8 @@ angular.module('Cinesponsable.theater').config(function($stateProvider) {
       tab: 'theaters'
     },
     resolve: {
-      theaters: function(Theater, AlloCine) {
-        return Theater.query().then(function(theaters) {
-          var theater, _i, _len;
-          for (_i = 0, _len = theaters.length; _i < _len; _i++) {
-            theater = theaters[_i];
-            AlloCine.getTheaterInfo(theater);
-          }
-          return theaters;
-        });
+      theaters: function(Theater) {
+        return Theater.query();
       }
     }
   });
@@ -161,17 +136,17 @@ var __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
 angular.module('Cinesponsable.theater').factory('Theater', function(Parse) {
-  var Cinema;
-  return Cinema = (function(_super) {
-    __extends(Cinema, _super);
+  var Theater;
+  return Theater = (function(_super) {
+    __extends(Theater, _super);
 
-    function Cinema() {
-      return Cinema.__super__.constructor.apply(this, arguments);
+    function Theater() {
+      return Theater.__super__.constructor.apply(this, arguments);
     }
 
-    Cinema.configure("Cinema", "alloCineId");
+    Theater.configure("Theater", "code", "name", "address", "locality", "state", "country", "geo", "pictures", "hasPRMAccess", "screenNumber");
 
-    return Cinema;
+    return Theater;
 
   })(Parse.Model);
 });
