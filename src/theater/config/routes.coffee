@@ -8,9 +8,5 @@ angular.module 'Cinesponsable.theater'
     data:
       tab: 'theaters'
     resolve:
-      theaters: (Theater, AlloCine) ->
+      theaters: (Theater) ->
         Theater.query()
-        .then (theaters) ->
-          for theater in theaters
-            AlloCine.getTheaterInfo theater
-          theaters

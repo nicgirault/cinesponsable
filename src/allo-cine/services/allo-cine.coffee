@@ -4,25 +4,22 @@ angular.module 'Cinesponsable.alloCine'
   ALLOCINE_API_URL
   ALLOCINE_PARTNER_TOKEN
 ) ->
-  AlloCineTheater = $resource ALLOCINE_API_URL + '/showtimelist?partner=:partner&format=json&theaters=:alloCineId'
+  AlloCineShowTime = $resource ALLOCINE_API_URL + '/showtimelist?partner=:partner&format=json&theaters=:alloCineId'
+  AlloCineTheater = $resource ALLOCINE_API_URL + '/theaterlist?partner=:partner&format=json&theaters=:alloCineId'
 
-  getTheaterInfo: (theater) ->
+  getTheaterInfo: (code) ->
     AlloCineTheater.get {
       partner: ALLOCINE_PARTNER_TOKEN,
-      alloCineId: theater.alloCineId
+      alloCineId: code
     }
     .$promise.then (data) ->
-      if data.feed
-        place = data.feed.theaterShowtimes[0]?.place?.theater
-        theater.name = place?.name
-        theater.address = place?.address
-        theater.postalCode = place?.postalCode
-        theater.city = place?.city
-        theater.picture = place?.picture?.href
-        theater.allocineLink = place?.link[0]?.href
-        theater.geoloc = place?.geoloc
-        theater.area = place?.area
-      theater
+      result = null
+      if _.isArray data.feed?.theater
+        result = _.find data.feed?.theater, code: code
+
+        if result?
+          result.alloCineId = code
+      result
 
   getShowtimes: (alloCineId) ->
     AlloCineTheater.get {

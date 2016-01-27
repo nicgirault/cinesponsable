@@ -5,4 +5,4 @@ md-list
     md-button.md-no-style.md-ink-ripple(ng-click="showtime(theater)" aria-label="theater")
       .md-list-item-text
         h3 {{ theater.name }}
-        p {{ theater.address }} {{ theater.postalCode }} {{ theater.city }}
+        p {{ theater.address }}, {{ theater.locality.postalCode }} {{ theater.locality.name }}
