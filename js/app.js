@@ -1,16 +1,11 @@
 'use strict';
-angular.module('Cinesponsable', ['ng', 'ngResource', 'ngAnimate', 'ngMaterial', 'ui.router', 'app.templates', 'Parse', 'uiGmapgoogle-maps', 'Cinesponsable.common', 'Cinesponsable.theater', 'Cinesponsable.alloCine', 'Cinesponsable.showtime', 'Cinesponsable.map']).config(function(ParseProvider) {
+angular.module('Cinesponsable', ['ng', 'ngResource', 'ngAnimate', 'ngMaterial', 'ui.router', 'app.templates', 'Parse', 'leaflet-directive', 'Cinesponsable.common', 'Cinesponsable.theater', 'Cinesponsable.alloCine', 'Cinesponsable.showtime', 'Cinesponsable.map']).config(function(ParseProvider) {
   return ParseProvider.initialize("2Y3JhneedL6TfTswvBgPfJbZ0qxQRJHj8jg0GqEU", "w1ek8EuSk7dD8bEBDSN5J8XTyXlGuOgx8mv7q7MD");
 }).config(function($mdIconProvider) {
   return $mdIconProvider.defaultIconSet('icons/mdi.light.svg');
 }).constant('ALLOCINE_API_URL', 'http://api.allocine.fr/rest/v3').constant('ALLOCINE_PARTNER_TOKEN', 'yW5kcm9pZC12M3M').config(function($locationProvider, $urlRouterProvider) {
   $locationProvider.hashPrefix('!');
   return $urlRouterProvider.otherwise('/map');
-}).config(function(uiGmapGoogleMapApiProvider) {
-  return uiGmapGoogleMapApiProvider.configure({
-    v: '3.21',
-    libraries: ''
-  });
 });
 
 angular.module('Cinesponsable.alloCine', []);
@@ -308,14 +303,47 @@ angular.module('Cinesponsable.common').controller('BaseCtrl', function($scope, $
   return console.log($state.current);
 });
 
-angular.module('Cinesponsable.map').controller('MapCtrl', function($scope, theaters, uiGmapGoogleMapApi, Theater, currentPosition) {
-  $scope.theaters = theaters;
-  return uiGmapGoogleMapApi.then(function(maps) {
-    return $scope.map = {
-      center: currentPosition,
-      zoom: 11
-    };
+angular.module('Cinesponsable.map').directive('mapPopup', function() {
+  return {
+    restrict: 'E',
+    templateUrl: 'map/directives/map-popup/view.html',
+    scope: {
+      title: '@',
+      subtitle: '@',
+      code: '@'
+    }
+  };
+});
+
+angular.module('Cinesponsable.map').controller('MapCtrl', function($scope, theaters, Theater, currentPosition) {
+  var markers, theater, _i, _len;
+  angular.extend($scope, {
+    userPosition: {
+      lat: currentPosition.latitude,
+      lng: currentPosition.longitude,
+      zoom: 8
+    },
+    data: {
+      markers: {}
+    }
   });
+  markers = {};
+  for (_i = 0, _len = theaters.length; _i < _len; _i++) {
+    theater = theaters[_i];
+    markers[theater.code] = {
+      lat: theater.geopoint.latitude,
+      lng: theater.geopoint.longitude,
+      compileMessage: true,
+      message: "<map-popup title='" + theater.name + "' subtitle='" + theater.address + " " + theater.locality.postalCode + " " + theater.locality.name + "' code='" + theater.code + "'>"
+    };
+  }
+  $scope.addMarkers = function() {
+    $scope.data.markers = {};
+    angular.extend($scope.data, {
+      markers: markers
+    });
+  };
+  return $scope.addMarkers();
 });
 
 angular.module('Cinesponsable.showtime').controller('ShowtimeCtrl', function($scope, theater, showtimes, $mdMedia, $mdDialog) {
