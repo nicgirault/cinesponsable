@@ -47,7 +47,7 @@ angular.module('Cinesponsable.alloCine').service('AlloCine', function($resource,
       });
     },
     getShowtimes: function(alloCineId) {
-      return AlloCineTheater.get({
+      return AlloCineShowTime.get({
         partner: ALLOCINE_PARTNER_TOKEN,
         alloCineId: alloCineId
       }).$promise.then(function(data) {
@@ -56,6 +56,10 @@ angular.module('Cinesponsable.alloCine').service('AlloCine', function($resource,
       });
     }
   };
+});
+
+angular.module('Cinesponsable.alloCine').service('theaterIds', function() {
+  return ['P7912', 'P0212', 'P1347', 'P0155', 'P2014', 'P8740', 'W0132', 'P0987', 'P0448', 'claudine goiffon??', 'P0974', 'W0030', 'P0675', 'W2622', 'W0750', 'P2219', 'P2164', 'W0278', 'P0262', 'P1004', 'P2131', 'P4335', 'W2680', 'P0541', 'P2143', 'MJC', 'P7908', 'P2163', 'W1229', 'W2626', 'P4334', 'P8567', 'P0286', 'P2130', 'P0212', 'P2600', 'P7882'];
 });
 
 angular.module('Cinesponsable.common').config(function($stateProvider) {
@@ -75,9 +79,102 @@ angular.module('Cinesponsable.map').config(function($stateProvider) {
       tab: 'map'
     },
     resolve: {
-      theaters: function(Theater, AlloCine, $q) {
+      theaters: function(Theater, position) {
         return Theater.query();
+      },
+      currentPosition: function(position) {
+        return position.get().then(function(position) {
+          return {
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude
+          };
+        })["catch"](function(err) {
+          return {
+            latitude: 48.860779,
+            longitude: 2.340175
+          };
+        });
       }
+    }
+  });
+});
+
+angular.module('Cinesponsable.map').service('position', function($q) {
+  return {
+    get: function() {
+      var deferred;
+      deferred = $q.defer();
+      navigator.geolocation.getCurrentPosition(function(position) {
+        return deferred.resolve(position);
+      }, function(err) {
+        console.warn(err);
+        return deferred.reject(err);
+      }, {
+        enableHighAccuracy: true,
+        timeout: 5000,
+        maximumAge: 0
+      });
+      return deferred.promise;
+    }
+  };
+});
+
+angular.module('Cinesponsable.showtime').run(function() {
+  return moment.locale('fr', {
+    months: 'janvier_février_mars_avril_mai_juin_juillet_août_septembre_octobre_novembre_décembre'.split('_'),
+    monthsShort: 'janv._févr._mars_avr._mai_juin_juil._août_sept._oct._nov._déc.'.split('_'),
+    weekdays: 'dimanche_lundi_mardi_mercredi_jeudi_vendredi_samedi'.split('_'),
+    weekdaysShort: 'dim._lun._mar._mer._jeu._ven._sam.'.split('_'),
+    weekdaysMin: 'Di_Lu_Ma_Me_Je_Ve_Sa'.split('_'),
+    longDateFormat: {
+      LT: 'HH:mm',
+      LTS: 'HH:mm:ss',
+      L: 'DD/MM/YYYY',
+      LL: 'D MMMM YYYY',
+      LLL: 'D MMMM YYYY LT',
+      LLLL: 'dddd D MMMM YYYY LT'
+    },
+    calendar: {
+      sameDay: '[Aujourd\'hui à] LT',
+      nextDay: '[Demain à] LT',
+      nextWeek: 'dddd [à] LT',
+      lastDay: '[Hier à] LT',
+      lastWeek: 'dddd [dernier à] LT',
+      sameElse: 'L'
+    },
+    relativeTime: {
+      future: 'dans %s',
+      past: 'il y a %s',
+      s: 'quelques secondes',
+      m: 'une minute',
+      mm: '%d minutes',
+      h: 'une heure',
+      hh: '%d heures',
+      d: 'un jour',
+      dd: '%d jours',
+      M: 'un mois',
+      MM: '%d mois',
+      y: 'une année',
+      yy: '%d années'
+    },
+    ordinalParse: /\d{1,2}(er|ème)/,
+    ordinal: function(number) {
+      return number + (number === 1 ? 'er' : 'ème');
+    },
+    meridiemParse: /PD|MD/,
+    isPM: function(input) {
+      return input.charAt(0) === 'M';
+    },
+    meridiem: function(hours, minutes, isLower) {
+      if (hours < 12) {
+        return 'PD';
+      } else {
+        return 'MD';
+      }
+    },
+    week: {
+      dow: 1,
+      doy: 4
     }
   });
 });
@@ -87,9 +184,6 @@ angular.module('Cinesponsable.showtime').config(function($stateProvider) {
     url: '/theater/:theaterId/showtime',
     templateUrl: 'showtime/states/theater-showtime/view.html',
     controller: 'ShowtimeCtrl',
-    data: {
-      tab: 'theaters'
-    },
     resolve: {
       showtimes: function(Theater, AlloCine, $stateParams) {
         if ($stateParams.theaterId == null) {
@@ -144,11 +238,69 @@ angular.module('Cinesponsable.theater').factory('Theater', function(Parse) {
       return Theater.__super__.constructor.apply(this, arguments);
     }
 
-    Theater.configure("Theater", "code", "name", "address", "locality", "state", "country", "geo", "pictures", "hasPRMAccess", "screenNumber");
+    Theater.configure("Theater", "code", "name", "address", "locality", "state", "country", "geopoint", "pictures", "hasPRMAccess", "screenNumber");
+
+    Theater.getClosestTheaters = function(geopoint, limit) {
+      if (limit == null) {
+        limit = 10;
+      }
+      return this.query({
+        where: {
+          geopoint: {
+            $nearSphere: {
+              __type: "GeoPoint",
+              latitude: geopoint.latitude,
+              longitude: geopoint.longitude
+            }
+          }
+        },
+        limit: limit
+      });
+    };
 
     return Theater;
 
   })(Parse.Model);
+});
+
+angular.module('Cinesponsable.alloCine').controller('AlloCineAdminCtrl', function($scope, theaterIds, AlloCine, Theater) {
+  return $scope.fetchTheaters = function() {
+    var code, _i, _len, _results;
+    _results = [];
+    for (_i = 0, _len = theaterIds.length; _i < _len; _i++) {
+      code = theaterIds[_i];
+      console.log("handling " + code);
+      _results.push(AlloCine.getTheaterInfo(code).then(function(info) {
+        var theater, _ref, _ref1, _ref2;
+        if (!info) {
+          return;
+        }
+        theater = new Theater({
+          code: info.code,
+          name: info.name,
+          address: info.address,
+          locality: {
+            name: info.city,
+            postalCode: info.postalCode
+          },
+          state: info.area,
+          country: "France",
+          geopoint: new Parse.GeoPoint({
+            latitude: (_ref = info.geoloc) != null ? _ref.lat : void 0,
+            longitude: (_ref1 = info.geoloc) != null ? _ref1.long : void 0
+          }),
+          pictures: [],
+          hasPRMAccess: info.hasPRMAccess === 1 ? true : false,
+          screenNumber: info.screenCount
+        });
+        if (((_ref2 = info.picture) != null ? _ref2.href : void 0) != null) {
+          theater.pictures.push(info.picture.href);
+        }
+        return theater.save();
+      }));
+    }
+    return _results;
+  };
 });
 
 angular.module('Cinesponsable.common').controller('BaseCtrl', function($scope, $state) {
@@ -156,31 +308,72 @@ angular.module('Cinesponsable.common').controller('BaseCtrl', function($scope, $
   return console.log($state.current);
 });
 
-angular.module('Cinesponsable.map').controller('MapCtrl', function($scope, theaters, uiGmapGoogleMapApi) {
+angular.module('Cinesponsable.map').controller('MapCtrl', function($scope, theaters, uiGmapGoogleMapApi, Theater, currentPosition) {
   $scope.theaters = theaters;
-  uiGmapGoogleMapApi.then(function(maps) {
+  return uiGmapGoogleMapApi.then(function(maps) {
     return $scope.map = {
-      center: {
-        latitude: 48.858181,
-        longitude: 2.335000
-      },
-      zoom: 13
+      center: currentPosition,
+      zoom: 11
     };
   });
-  return $scope.events = {
-    dragend: function(maps, eventName, args) {
-      var newCenter;
-      return newCenter = {
-        latitude: maps.center.A,
-        longitude: maps.center.F
-      };
-    }
+});
+
+angular.module('Cinesponsable.showtime').controller('ShowtimeCtrl', function($scope, theater, showtimes, $mdMedia, $mdDialog) {
+  $scope.showtimes = showtimes;
+  $scope.theater = theater;
+  return $scope.showDetails = function(showtime, event) {
+    var useFullScreen;
+    useFullScreen = $mdMedia('sm') || $mdMedia('xs');
+    return $mdDialog.show({
+      controller: 'DetailsCtrl',
+      templateUrl: 'showtime/states/theater-showtime/details.html',
+      parent: angular.element(document.body),
+      targetEvent: event,
+      clickOutsideToClose: true,
+      fullscreen: useFullScreen,
+      resolve: {
+        showtime: function() {
+          return showtime;
+        }
+      }
+    });
   };
 });
 
-angular.module('Cinesponsable.showtime').controller('ShowtimeCtrl', function($scope, theater, showtimes) {
-  $scope.showtimes = showtimes;
-  $scope.theater = theater;
+angular.module('Cinesponsable.showtime').controller('DetailsCtrl', function($scope, showtime, $mdDialog) {
+  var genre, genres, seance, time, times, _i, _len, _ref;
+  $scope.showtime = showtime;
+  $scope.releaseDate = moment(showtime.onShow.movie.release.releaseDate).format("dddd D MMMM YYYY");
+  _ref = $scope.showtime.scr;
+  for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+    seance = _ref[_i];
+    seance.date = moment(seance.d).format("dddd D MMMM YYYY");
+    times = (function() {
+      var _j, _len1, _ref1, _results;
+      _ref1 = seance.t;
+      _results = [];
+      for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
+        time = _ref1[_j];
+        _results.push(time.$);
+      }
+      return _results;
+    })();
+    seance.time = times.join(', ');
+  }
+  genres = (function() {
+    var _j, _len1, _ref1, _results;
+    _ref1 = showtime.onShow.movie.genre;
+    _results = [];
+    for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
+      genre = _ref1[_j];
+      _results.push(genre.$);
+    }
+    return _results;
+  })();
+  $scope.genres = genres.join(', ');
+  $scope.cancel = function() {
+    return $mdDialog.cancel();
+  };
   return $scope.versionLabel = {
     "true": "original",
     "false": "doublage"
@@ -191,7 +384,7 @@ angular.module('Cinesponsable.theater').controller('TheaterListCtrl', function($
   $scope.theaters = theaters;
   return $scope.showtime = function(theater) {
     return $state.go('base.showtime', {
-      theaterId: theater.alloCineId
+      theaterId: theater.code
     });
   };
 });
