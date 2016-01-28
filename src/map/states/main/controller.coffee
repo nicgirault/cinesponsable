@@ -2,16 +2,29 @@ angular.module 'Cinesponsable.map'
 .controller 'MapCtrl', (
   $scope
   theaters
-  uiGmapGoogleMapApi
   Theater
   currentPosition
 ) ->
-  $scope.theaters = theaters
+  angular.extend $scope,
+    userPosition:
+      lat: currentPosition.latitude
+      lng: currentPosition.longitude
+      zoom: 8
+    data: markers: {}
 
-  uiGmapGoogleMapApi.then (maps) ->
-    $scope.map =
-      center: currentPosition
-      zoom: 11
+  markers = {}
+  for theater in theaters
+    markers[theater.code] =
+      lat: theater.geopoint.latitude
+      lng: theater.geopoint.longitude
+      compileMessage: true
+      message: "<map-popup title='#{theater.name}' subtitle='#{theater.address} #{theater.locality.postalCode} #{theater.locality.name}' code='#{theater.code}'>"
+
+  $scope.addMarkers = ->
+    $scope.data.markers = {}
+    angular.extend $scope.data, markers: markers
+    return
+  $scope.addMarkers()
   # $scope.events =
   #   dragend: (maps, eventName, args) ->
   #     newCenter =

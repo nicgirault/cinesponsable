@@ -8,7 +8,7 @@ angular.module 'Cinesponsable', [
   'ui.router'
   'app.templates'
   'Parse'
-  'uiGmapgoogle-maps'
+  'leaflet-directive'
 
   'Cinesponsable.common'
   'Cinesponsable.theater'
@@ -38,10 +38,3 @@ angular.module 'Cinesponsable', [
 ) ->
   $locationProvider.hashPrefix '!'
   $urlRouterProvider.otherwise '/map'
-
-.config (uiGmapGoogleMapApiProvider) ->
-  uiGmapGoogleMapApiProvider.configure {
-      #key: 'AIzaSyDXUwacxRBdrqDyJ0x7kqqD9DuvVxJjngI'
-      v: '3.21'
-      libraries: ''
-    }

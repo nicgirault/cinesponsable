@@ -13,7 +13,8 @@ gulp.task 'vendor', (done) ->
     'bower_components/angular-parse/angular-parse.js'
     'bower_components/lodash/lodash.min.js'
     'bower_components/angular-simple-logger/dist/angular-simple-logger.min.js'
-    'bower_components/angular-google-maps/dist/angular-google-maps.js'
+    'bower_components/leaflet/dist/leaflet.js'
+    'bower_components/angular-leaflet-directive/dist/angular-leaflet-directive.min.js'
     'bower_components/moment/min/moment.min.js'
   ]
   .pipe(concat('vendor.js'))
