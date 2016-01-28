@@ -1,0 +1,22 @@
+md-dialog
+  md-toolbar
+    .md-toolbar-tools
+      div(layout="column")
+        h2.md-title {{ showtime.onShow.movie.title }} ({{ showtime.onShow.movie.castingShort.directors }})
+      span(flex)
+      md-button.md-icon-button(ng-click='cancel()')
+        md-icon(md-svg-src='close', aria-label='Close dialog')
+  md-dialog-content
+    .md-padding
+      div(layout="column")
+        p.md-body-1(ng-if="showtime.onShow.movie.castingShort.actors")
+          | Avec {{ showtime.onShow.movie.castingShort.actors }}
+        p.md-body-1(ng-if="showtime.onShow.movie.genre") Genre : {{ genres }}
+        p.md-body-1(ng-if="showtime.onShow.movie.release.releaseDate") Date de sortie : {{ releaseDate }}
+        p.md-body-1 Langue: {{ showtime.version.$ }} ({{ versionLabel[showtime.version.original] }})
+        md-list
+          md-subheader Seances
+          md-list-item(ng-repeat='seance in showtime.scr')
+            p  {{ seance.date }} : {{ seance.time }}
+
+    

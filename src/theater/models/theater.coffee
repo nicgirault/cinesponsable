@@ -9,8 +9,18 @@ angular.module 'Cinesponsable.theater'
       "locality"
       "state",
       "country",
-      "geo",
+      "geopoint",
       "pictures",
       "hasPRMAccess",
       "screenNumber"
     )
+
+    @getClosestTheaters = (geopoint, limit = 10) ->
+      @query
+        where:
+          geopoint:
+            $nearSphere:
+              __type: "GeoPoint"
+              latitude: geopoint.latitude
+              longitude: geopoint.longitude
+        limit: limit

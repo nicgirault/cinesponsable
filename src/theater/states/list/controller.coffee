@@ -3,4 +3,4 @@ angular.module 'Cinesponsable.theater'
   $scope.theaters = theaters
 
   $scope.showtime = (theater) ->
-    $state.go 'base.showtime', {theaterId: theater.alloCineId}
+    $state.go 'base.showtime', {theaterId: theater.code}

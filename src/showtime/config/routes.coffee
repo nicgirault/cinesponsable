@@ -8,8 +8,6 @@ angular.module 'Cinesponsable.showtime'
     url: '/theater/:theaterId/showtime'
     templateUrl: 'showtime/states/theater-showtime/view.html'
     controller: 'ShowtimeCtrl'
-    data:
-      tab: 'theaters'
     resolve:
       showtimes: (Theater, AlloCine, $stateParams) ->
         return null unless $stateParams.theaterId?

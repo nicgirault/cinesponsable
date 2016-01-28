@@ -3,5 +3,6 @@ div(flex="100")
     ui-gmap-marker(
       ng-repeat='theater in theaters'
       idKey='theater.code'
-      coords='theater.geo'
+      coords='theater.geopoint'
     )
+      ui-gmap-window(templateUrl='"map/directives/map-window.html"' templateParameter='theater')

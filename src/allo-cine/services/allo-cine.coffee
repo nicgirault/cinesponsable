@@ -22,7 +22,7 @@ angular.module 'Cinesponsable.alloCine'
       result
 
   getShowtimes: (alloCineId) ->
-    AlloCineTheater.get {
+    AlloCineShowTime.get {
       partner: ALLOCINE_PARTNER_TOKEN,
       alloCineId: alloCineId
     }
