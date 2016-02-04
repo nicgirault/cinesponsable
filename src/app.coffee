@@ -25,12 +25,11 @@ angular.module 'Cinesponsable', [
     "w1ek8EuSk7dD8bEBDSN5J8XTyXlGuOgx8mv7q7MD"  # REST API Key
   )
 
-.config ($mdIconProvider) ->
-  $mdIconProvider
-    .defaultIconSet 'icons/mdi.light.svg'
-
 .constant 'ALLOCINE_API_URL', 'http://api.allocine.fr/rest/v3'
 .constant 'ALLOCINE_PARTNER_TOKEN', 'yW5kcm9pZC12M3M'
+
+.config ($mdGestureProvider) ->
+  $mdGestureProvider.skipClickHijack()
 
 .config (
   $locationProvider
