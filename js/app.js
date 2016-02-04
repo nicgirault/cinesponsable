@@ -8,6 +8,8 @@ angular.module('Cinesponsable', ['ng', 'ngResource', 'ngAnimate', 'ngMaterial', 
   return $urlRouterProvider.otherwise('/map');
 });
 
+angular.module('Cinesponsable.alloCine', []);
+
 angular.module('Cinesponsable.common', []);
 
 angular.module('Cinesponsable.map', []);
@@ -16,7 +18,96 @@ angular.module('Cinesponsable.showtime', []);
 
 angular.module('Cinesponsable.theater', []);
 
-angular.module('Cinesponsable.alloCine', []);
+angular.module('Cinesponsable.theater').config(function($stateProvider) {
+  return $stateProvider.state('base.admin', {
+    url: '/admin',
+    templateUrl: 'allo-cine/states/admin/view.html',
+    controller: 'AlloCineAdminCtrl'
+  });
+});
+
+angular.module('Cinesponsable.alloCine').service('AlloCine', function($resource, ALLOCINE_API_URL, ALLOCINE_PARTNER_TOKEN, Movie, $q) {
+  var AlloCineMovieList, AlloCineShowTime, AlloCineTheater;
+  AlloCineShowTime = $resource(ALLOCINE_API_URL + '/showtimelist?partner=:partner&format=json&theaters=:alloCineId');
+  AlloCineTheater = $resource(ALLOCINE_API_URL + '/theaterlist?partner=:partner&format=json&theaters=:alloCineId');
+  AlloCineMovieList = $resource(ALLOCINE_API_URL + '/movielist?partner=:partner&count=:count&order=theatercount&format=json&filter=nowshowing');
+  return {
+    getTheaterInfo: function(code) {
+      return AlloCineTheater.get({
+        partner: ALLOCINE_PARTNER_TOKEN,
+        alloCineId: code
+      }).$promise.then(function(data) {
+        var result, _ref, _ref1;
+        result = null;
+        if (_.isArray((_ref = data.feed) != null ? _ref.theater : void 0)) {
+          result = _.find((_ref1 = data.feed) != null ? _ref1.theater : void 0, {
+            code: code
+          });
+          if (result != null) {
+            result.alloCineId = code;
+          }
+        }
+        return result;
+      });
+    },
+    getShowtimes: function(alloCineId) {
+      return AlloCineShowTime.get({
+        partner: ALLOCINE_PARTNER_TOKEN,
+        alloCineId: alloCineId
+      }).$promise.then(function(data) {
+        var _ref, _ref1;
+        return data != null ? (_ref = data.feed) != null ? (_ref1 = _ref.theaterShowtimes[0]) != null ? _ref1.movieShowtimes : void 0 : void 0 : void 0;
+      });
+    },
+    fetchMovies: function() {
+      return AlloCineMovieList.get({
+        partner: ALLOCINE_PARTNER_TOKEN,
+        count: 1
+      }).$promise.then(function(data) {
+        var totalResults, _ref;
+        totalResults = data != null ? (_ref = data.feed) != null ? _ref.totalResults : void 0 : void 0;
+        if (totalResults == null) {
+          return;
+        }
+        return AlloCineMovieList.get({
+          partner: ALLOCINE_PARTNER_TOKEN,
+          count: totalResults
+        }).$promise.then(function(data) {
+          var movies, _ref1;
+          movies = data != null ? (_ref1 = data.feed) != null ? _ref1.movie : void 0 : void 0;
+          return async.eachSeries(movies, function(m, callback) {
+            var genre, movie, _ref2;
+            movie = new Movie();
+            movie.type = m.movieType.$;
+            movie.originalTitle = m.originalTitle;
+            movie.title = m.title;
+            movie.genres = (function() {
+              var _i, _len, _ref2, _results;
+              _ref2 = m.genre;
+              _results = [];
+              for (_i = 0, _len = _ref2.length; _i < _len; _i++) {
+                genre = _ref2[_i];
+                _results.push(genre.$);
+              }
+              return _results;
+            })();
+            movie.synopsisShort = m.synopsisShort;
+            movie.casting = m.castingShort;
+            movie.poster = (_ref2 = m.poster) != null ? _ref2.href : void 0;
+            return movie.save().then(function() {
+              console.log('saving movie: ' + m.originalTitle, movie);
+              return callback();
+            });
+          });
+        });
+      });
+    }
+  };
+});
+
+angular.module('Cinesponsable.alloCine').service('theaterIds', function() {
+  return ['P7912', 'P0212', 'P1347', 'P0155', 'P2014', 'P8740', 'W0132', 'P0987', 'P0448', 'claudine goiffon??', 'P0974', 'W0030', 'P0675', 'W2622', 'W0750', 'P2219', 'P2164', 'W0278', 'P0262', 'P1004', 'P2131', 'P4335', 'W2680', 'P0541', 'P2143', 'MJC', 'P7908', 'P2163', 'W1229', 'W2626', 'P4334', 'P8567', 'P0286', 'P2130', 'P0212', 'P2600', 'P7882'];
+});
 
 angular.module('Cinesponsable.common').config(function($stateProvider) {
   return $stateProvider.state('base', {
@@ -27,7 +118,7 @@ angular.module('Cinesponsable.common').config(function($stateProvider) {
 });
 
 angular.module('Cinesponsable.map').config(function($stateProvider) {
-  return $stateProvider.state('base.map', {
+  return $stateProvider.state('map', {
     url: '/map',
     templateUrl: 'map/states/main/view.html',
     controller: 'MapCtrl',
@@ -238,95 +329,45 @@ angular.module('Cinesponsable.theater').factory('Theater', function(Parse) {
   })(Parse.Model);
 });
 
-angular.module('Cinesponsable.theater').config(function($stateProvider) {
-  return $stateProvider.state('base.admin', {
-    url: '/admin',
-    templateUrl: 'allo-cine/states/admin/view.html',
-    controller: 'AlloCineAdminCtrl'
-  });
-});
-
-angular.module('Cinesponsable.alloCine').service('AlloCine', function($resource, ALLOCINE_API_URL, ALLOCINE_PARTNER_TOKEN, Movie, $q) {
-  var AlloCineMovieList, AlloCineShowTime, AlloCineTheater;
-  AlloCineShowTime = $resource(ALLOCINE_API_URL + '/showtimelist?partner=:partner&format=json&theaters=:alloCineId');
-  AlloCineTheater = $resource(ALLOCINE_API_URL + '/theaterlist?partner=:partner&format=json&theaters=:alloCineId');
-  AlloCineMovieList = $resource(ALLOCINE_API_URL + '/movielist?partner=:partner&count=:count&order=theatercount&format=json&filter=nowshowing');
-  return {
-    getTheaterInfo: function(code) {
-      return AlloCineTheater.get({
-        partner: ALLOCINE_PARTNER_TOKEN,
-        alloCineId: code
-      }).$promise.then(function(data) {
-        var result, _ref, _ref1;
-        result = null;
-        if (_.isArray((_ref = data.feed) != null ? _ref.theater : void 0)) {
-          result = _.find((_ref1 = data.feed) != null ? _ref1.theater : void 0, {
-            code: code
-          });
-          if (result != null) {
-            result.alloCineId = code;
-          }
-        }
-        return result;
-      });
-    },
-    getShowtimes: function(alloCineId) {
-      return AlloCineShowTime.get({
-        partner: ALLOCINE_PARTNER_TOKEN,
-        alloCineId: alloCineId
-      }).$promise.then(function(data) {
-        var _ref, _ref1;
-        return data != null ? (_ref = data.feed) != null ? (_ref1 = _ref.theaterShowtimes[0]) != null ? _ref1.movieShowtimes : void 0 : void 0 : void 0;
-      });
-    },
-    fetchMovies: function() {
-      return AlloCineMovieList.get({
-        partner: ALLOCINE_PARTNER_TOKEN,
-        count: 1
-      }).$promise.then(function(data) {
-        var totalResults, _ref;
-        totalResults = data != null ? (_ref = data.feed) != null ? _ref.totalResults : void 0 : void 0;
-        if (totalResults == null) {
+angular.module('Cinesponsable.alloCine').controller('AlloCineAdminCtrl', function($scope, theaterIds, AlloCine, Theater) {
+  $scope.fetchTheaters = function() {
+    var code, _i, _len, _results;
+    _results = [];
+    for (_i = 0, _len = theaterIds.length; _i < _len; _i++) {
+      code = theaterIds[_i];
+      console.log("handling " + code);
+      _results.push(AlloCine.getTheaterInfo(code).then(function(info) {
+        var theater, _ref, _ref1, _ref2;
+        if (!info) {
           return;
         }
-        return AlloCineMovieList.get({
-          partner: ALLOCINE_PARTNER_TOKEN,
-          count: totalResults
-        }).$promise.then(function(data) {
-          var movies, _ref1;
-          movies = data != null ? (_ref1 = data.feed) != null ? _ref1.movie : void 0 : void 0;
-          return async.eachSeries(movies, function(m, callback) {
-            var genre, movie, _ref2;
-            movie = new Movie();
-            movie.type = m.movieType.$;
-            movie.originalTitle = m.originalTitle;
-            movie.title = m.title;
-            movie.genres = (function() {
-              var _i, _len, _ref2, _results;
-              _ref2 = m.genre;
-              _results = [];
-              for (_i = 0, _len = _ref2.length; _i < _len; _i++) {
-                genre = _ref2[_i];
-                _results.push(genre.$);
-              }
-              return _results;
-            })();
-            movie.synopsisShort = m.synopsisShort;
-            movie.casting = m.castingShort;
-            movie.poster = (_ref2 = m.poster) != null ? _ref2.href : void 0;
-            return movie.save().then(function() {
-              console.log('saving movie: ' + m.originalTitle, movie);
-              return callback();
-            });
-          });
+        theater = new Theater({
+          code: info.code,
+          name: info.name,
+          address: info.address,
+          locality: {
+            name: info.city,
+            postalCode: info.postalCode
+          },
+          state: info.area,
+          country: "France",
+          geopoint: new Parse.GeoPoint({
+            latitude: (_ref = info.geoloc) != null ? _ref.lat : void 0,
+            longitude: (_ref1 = info.geoloc) != null ? _ref1.long : void 0
+          }),
+          pictures: [],
+          hasPRMAccess: info.hasPRMAccess === 1 ? true : false,
+          screenNumber: info.screenCount
         });
-      });
+        if (((_ref2 = info.picture) != null ? _ref2.href : void 0) != null) {
+          theater.pictures.push(info.picture.href);
+        }
+        return theater.save();
+      }));
     }
+    return _results;
   };
-});
-
-angular.module('Cinesponsable.alloCine').service('theaterIds', function() {
-  return ['P7912', 'P0212', 'P1347', 'P0155', 'P2014', 'P8740', 'W0132', 'P0987', 'P0448', 'claudine goiffon??', 'P0974', 'W0030', 'P0675', 'W2622', 'W0750', 'P2219', 'P2164', 'W0278', 'P0262', 'P1004', 'P2131', 'P4335', 'W2680', 'P0541', 'P2143', 'MJC', 'P7908', 'P2163', 'W1229', 'W2626', 'P4334', 'P8567', 'P0286', 'P2130', 'P0212', 'P2600', 'P7882'];
+  return $scope.fetchMovies = AlloCine.fetchMovies;
 });
 
 angular.module('Cinesponsable.common').controller('BaseCtrl', function($scope, $state) {
@@ -446,45 +487,4 @@ angular.module('Cinesponsable.theater').controller('TheaterListCtrl', function($
       theaterId: theater.code
     });
   };
-});
-
-angular.module('Cinesponsable.alloCine').controller('AlloCineAdminCtrl', function($scope, theaterIds, AlloCine, Theater) {
-  $scope.fetchTheaters = function() {
-    var code, _i, _len, _results;
-    _results = [];
-    for (_i = 0, _len = theaterIds.length; _i < _len; _i++) {
-      code = theaterIds[_i];
-      console.log("handling " + code);
-      _results.push(AlloCine.getTheaterInfo(code).then(function(info) {
-        var theater, _ref, _ref1, _ref2;
-        if (!info) {
-          return;
-        }
-        theater = new Theater({
-          code: info.code,
-          name: info.name,
-          address: info.address,
-          locality: {
-            name: info.city,
-            postalCode: info.postalCode
-          },
-          state: info.area,
-          country: "France",
-          geopoint: new Parse.GeoPoint({
-            latitude: (_ref = info.geoloc) != null ? _ref.lat : void 0,
-            longitude: (_ref1 = info.geoloc) != null ? _ref1.long : void 0
-          }),
-          pictures: [],
-          hasPRMAccess: info.hasPRMAccess === 1 ? true : false,
-          screenNumber: info.screenCount
-        });
-        if (((_ref2 = info.picture) != null ? _ref2.href : void 0) != null) {
-          theater.pictures.push(info.picture.href);
-        }
-        return theater.save();
-      }));
-    }
-    return _results;
-  };
-  return $scope.fetchMovies = AlloCine.fetchMovies;
 });
