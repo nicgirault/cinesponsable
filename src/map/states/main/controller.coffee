@@ -25,6 +25,7 @@ angular.module 'Cinesponsable.map'
     angular.extend $scope.data, markers: markers
     return
   $scope.addMarkers()
+
   # $scope.events =
   #   dragend: (maps, eventName, args) ->
   #     newCenter =

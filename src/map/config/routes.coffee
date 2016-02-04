@@ -10,5 +10,12 @@ angular.module 'Cinesponsable.map'
     data:
       tab: 'map'
     resolve:
-      theaters: (Theater) ->
+      theaters: (Theater, position) ->
         Theater.query()
+      currentPosition: (position) ->
+        position.get().then (position) ->
+          latitude: position.coords.latitude
+          longitude: position.coords.longitude
+        .catch (err) ->
+          latitude: 48.860779
+          longitude: 2.340175
