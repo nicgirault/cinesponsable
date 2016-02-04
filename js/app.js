@@ -1,8 +1,6 @@
 'use strict';
-angular.module('Cinesponsable', ['ng', 'ngResource', 'ngAnimate', 'ngMaterial', 'ui.router', 'app.templates', 'Parse', 'leaflet-directive', 'Cinesponsable.common', 'Cinesponsable.theater', 'Cinesponsable.alloCine', 'Cinesponsable.showtime', 'Cinesponsable.map']).config(function(ParseProvider) {
+angular.module('Cinesponsable', ['ng', 'ngResource', 'ngAnimate', 'ui.router', 'app.templates', 'Parse', 'leaflet-directive', 'Cinesponsable.common', 'Cinesponsable.theater', 'Cinesponsable.alloCine', 'Cinesponsable.showtime', 'Cinesponsable.map']).config(function(ParseProvider) {
   return ParseProvider.initialize("2Y3JhneedL6TfTswvBgPfJbZ0qxQRJHj8jg0GqEU", "w1ek8EuSk7dD8bEBDSN5J8XTyXlGuOgx8mv7q7MD");
-}).config(function($mdIconProvider) {
-  return $mdIconProvider.defaultIconSet('icons/mdi.light.svg');
 }).constant('ALLOCINE_API_URL', 'http://api.allocine.fr/rest/v3').constant('ALLOCINE_PARTNER_TOKEN', 'yW5kcm9pZC12M3M').config(function($locationProvider, $urlRouterProvider) {
   $locationProvider.hashPrefix('!');
   return $urlRouterProvider.otherwise('/map');
@@ -117,6 +115,25 @@ angular.module('Cinesponsable.common').config(function($stateProvider) {
   });
 });
 
+var __hasProp = {}.hasOwnProperty,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+angular.module('Cinesponsable.theater').factory('Movie', function(Parse) {
+  var Movie;
+  return Movie = (function(_super) {
+    __extends(Movie, _super);
+
+    function Movie() {
+      return Movie.__super__.constructor.apply(this, arguments);
+    }
+
+    Movie.configure("Movie", "type", "originalTitle", "title", "genres", "synopsisShort", "casting", "poster");
+
+    return Movie;
+
+  })(Parse.Model);
+});
+
 angular.module('Cinesponsable.map').config(function($stateProvider) {
   return $stateProvider.state('map', {
     url: '/map',
@@ -164,25 +181,6 @@ angular.module('Cinesponsable.map').service('position', function($q) {
       return deferred.promise;
     }
   };
-});
-
-var __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
-
-angular.module('Cinesponsable.theater').factory('Movie', function(Parse) {
-  var Movie;
-  return Movie = (function(_super) {
-    __extends(Movie, _super);
-
-    function Movie() {
-      return Movie.__super__.constructor.apply(this, arguments);
-    }
-
-    Movie.configure("Movie", "type", "originalTitle", "title", "genres", "synopsisShort", "casting", "poster");
-
-    return Movie;
-
-  })(Parse.Model);
 });
 
 angular.module('Cinesponsable.showtime').run(function() {
