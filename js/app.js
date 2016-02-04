@@ -118,7 +118,7 @@ angular.module('Cinesponsable.common').config(function($stateProvider) {
 });
 
 angular.module('Cinesponsable.map').config(function($stateProvider) {
-  return $stateProvider.state('map', {
+  return $stateProvider.state('base.map', {
     url: '/map',
     templateUrl: 'map/states/main/view.html',
     controller: 'MapCtrl',
@@ -126,21 +126,8 @@ angular.module('Cinesponsable.map').config(function($stateProvider) {
       tab: 'map'
     },
     resolve: {
-      theaters: function(Theater, position) {
+      theaters: function(Theater) {
         return Theater.query();
-      },
-      currentPosition: function(position) {
-        return position.get().then(function(position) {
-          return {
-            latitude: position.coords.latitude,
-            longitude: position.coords.longitude
-          };
-        })["catch"](function(err) {
-          return {
-            latitude: 48.860779,
-            longitude: 2.340175
-          };
-        });
       }
     }
   });
@@ -415,12 +402,7 @@ angular.module('Cinesponsable.map').controller('MapCtrl', function($scope, theat
       markers: markers
     });
   };
-  $scope.addMarkers();
-  return $scope.events = {
-    markers: {
-      enable: leafletMarkerEvents.getAvailableEvents()
-    }
-  };
+  return $scope.addMarkers();
 });
 
 angular.module('Cinesponsable.showtime').controller('ShowtimeCtrl', function($scope, theater, showtimes, $mdMedia, $mdDialog) {
