@@ -409,6 +409,9 @@ angular.module('Cinesponsable.map').controller('MapCtrl', function($scope, theat
       message: "<map-popup title='" + theater.name + "' subtitle='" + theater.address + " " + theater.locality.postalCode + " " + theater.locality.name + "' code='" + theater.code + "'>"
     };
   }
+  $scope.$on('leafletDirectiveMarker.click', function(event, args) {
+    return alert('marker click');
+  });
   $scope.addMarkers = function() {
     $scope.data.markers = {};
     angular.extend($scope.data, {
