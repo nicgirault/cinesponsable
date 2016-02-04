@@ -387,7 +387,7 @@ angular.module('Cinesponsable.map').directive('mapPopup', function() {
   };
 });
 
-angular.module('Cinesponsable.map').controller('MapCtrl', function($scope, theaters, Theater, currentPosition) {
+angular.module('Cinesponsable.map').controller('MapCtrl', function($scope, theaters, Theater, currentPosition, leafletMarkerEvents) {
   var markers, theater, _i, _len;
   angular.extend($scope, {
     userPosition: {
@@ -409,16 +409,18 @@ angular.module('Cinesponsable.map').controller('MapCtrl', function($scope, theat
       message: "<map-popup title='" + theater.name + "' subtitle='" + theater.address + " " + theater.locality.postalCode + " " + theater.locality.name + "' code='" + theater.code + "'>"
     };
   }
-  $scope.$on('leafletDirectiveMarker.click', function(event, args) {
-    return alert('marker click');
-  });
   $scope.addMarkers = function() {
     $scope.data.markers = {};
     angular.extend($scope.data, {
       markers: markers
     });
   };
-  return $scope.addMarkers();
+  $scope.addMarkers();
+  return $scope.events = {
+    markers: {
+      enable: leafletMarkerEvents.getAvailableEvents()
+    }
+  };
 });
 
 angular.module('Cinesponsable.showtime').controller('ShowtimeCtrl', function($scope, theater, showtimes, $mdMedia, $mdDialog) {
