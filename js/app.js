@@ -126,8 +126,21 @@ angular.module('Cinesponsable.map').config(function($stateProvider) {
       tab: 'map'
     },
     resolve: {
-      theaters: function(Theater) {
+      theaters: function(Theater, position) {
         return Theater.query();
+      },
+      currentPosition: function(position) {
+        return position.get().then(function(position) {
+          return {
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude
+          };
+        })["catch"](function(err) {
+          return {
+            latitude: 48.860779,
+            longitude: 2.340175
+          };
+        });
       }
     }
   });
@@ -374,7 +387,7 @@ angular.module('Cinesponsable.map').directive('mapPopup', function() {
   };
 });
 
-angular.module('Cinesponsable.map').controller('MapCtrl', function($scope, theaters, Theater, currentPosition, leafletMarkerEvents) {
+angular.module('Cinesponsable.map').controller('MapCtrl', function($scope, theaters, Theater, currentPosition) {
   var markers, theater, _i, _len;
   angular.extend($scope, {
     userPosition: {
