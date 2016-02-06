@@ -1,8 +1,10 @@
 'use strict';
-angular.module('Cinesponsable', ['ng', 'ngResource', 'ngAnimate', 'ngMaterial', 'ui.router', 'app.templates', 'Parse', 'leaflet-directive', 'Cinesponsable.common', 'Cinesponsable.theater', 'Cinesponsable.alloCine', 'Cinesponsable.showtime', 'Cinesponsable.map']).config(function(ParseProvider) {
+angular.module('Cinesponsable', ['ng', 'ngResource', 'ngAnimate', 'ngMaterial', 'ui.router', 'app.templates', 'Parse', 'leaflet-directive', 'Cinesponsable.common', 'Cinesponsable.theater', 'Cinesponsable.alloCine', 'Cinesponsable.showtime', 'Cinesponsable.map', 'Cinesponsable.search']).config(function(ParseProvider) {
   return ParseProvider.initialize("2Y3JhneedL6TfTswvBgPfJbZ0qxQRJHj8jg0GqEU", "w1ek8EuSk7dD8bEBDSN5J8XTyXlGuOgx8mv7q7MD");
 }).constant('ALLOCINE_API_URL', 'http://api.allocine.fr/rest/v3').constant('ALLOCINE_PARTNER_TOKEN', 'yW5kcm9pZC12M3M').config(function($mdGestureProvider) {
   return $mdGestureProvider.skipClickHijack();
+}).config(function($mdIconProvider) {
+  return $mdIconProvider.defaultIconSet('icons/mdi.light.svg');
 }).config(function($locationProvider, $urlRouterProvider) {
   $locationProvider.hashPrefix('!');
   return $urlRouterProvider.otherwise('/map');
@@ -13,6 +15,8 @@ angular.module('Cinesponsable.alloCine', []);
 angular.module('Cinesponsable.common', []);
 
 angular.module('Cinesponsable.map', []);
+
+angular.module('Cinesponsable.search', []);
 
 angular.module('Cinesponsable.showtime', []);
 
@@ -340,13 +344,14 @@ angular.module('Cinesponsable.map').controller('MapCtrl', function($scope, theat
     userPosition: {
       lat: currentPosition.latitude,
       lng: currentPosition.longitude,
-      zoom: 8
+      zoom: 13
     },
     data: {
       markers: {}
     }
   });
   markers = {};
+  $scope.theaters = theaters;
   for (_i = 0, _len = theaters.length; _i < _len; _i++) {
     theater = theaters[_i];
     markers[theater.code] = {
@@ -363,6 +368,61 @@ angular.module('Cinesponsable.map').controller('MapCtrl', function($scope, theat
     });
   };
   return $scope.addMarkers();
+});
+
+angular.module('Cinesponsable.search').controller('searchBarCtrl', function($scope, $state, Theater) {
+  var repos;
+  $scope.searchTextChange = function(text) {};
+  $scope.itemChange = function(item) {
+    var _ref;
+    if (((_ref = item.constructor) != null ? _ref.name : void 0) === 'Theater') {
+      $state.go('base.showtime', {
+        theaterId: item.code
+      });
+    }
+  };
+  repos = [
+    {
+      'name': 'Angular 1',
+      'url': 'https://github.com/angular/angular.js',
+      'watchers': '3,623',
+      'forks': '16,175'
+    }, {
+      'name': 'Angular 2',
+      'url': 'https://github.com/angular/angular',
+      'watchers': '469',
+      'forks': '760'
+    }, {
+      'name': 'Angular Material',
+      'url': 'https://github.com/angular/material',
+      'watchers': '727',
+      'forks': '1,241'
+    }, {
+      'name': 'Bower Material',
+      'url': 'https://github.com/angular/bower-material',
+      'watchers': '42',
+      'forks': '84'
+    }, {
+      'name': 'Material Start',
+      'url': 'https://github.com/angular/material-start',
+      'watchers': '81',
+      'forks': '303'
+    }
+  ];
+  repos.map(function(repo) {
+    repo.value = repo.name.toLowerCase();
+    return repo;
+  });
+  $scope.simulateQuery = false;
+  return $scope.isDisabled = false;
+});
+
+angular.module('Cinesponsable.search').directive('searchBar', function() {
+  return {
+    restrict: 'E',
+    templateUrl: 'search/directives/search-bar/view.html',
+    controller: 'searchBarCtrl'
+  };
 });
 
 angular.module('Cinesponsable.showtime').controller('ShowtimeCtrl', function($scope, theater, showtimes, $mdMedia, $mdDialog) {

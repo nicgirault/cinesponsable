@@ -11,3 +11,36 @@ html {
 .leaflet-popup-content-wrapper {
   border-radius: 0px;
 }
+search-bar {
+  position: absolute;
+  top: 130px;
+  z-index: 10000;
+  width: 90%;
+  left: 5%;
+}
+.md-autocomplete-suggestions-container li {
+  color: black;
+}
+.md-autocomplete-suggestions-container li .highlight {
+  color: #1a69cd;
+  font-weight: bold;
+}
+.autocomplete-custom-template li {
+  border-bottom: 1px solid #ccc;
+  height: auto;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  white-space: normal;
+}
+.autocomplete-custom-template li:last-child {
+  border-bottom-width: 0;
+}
+.autocomplete-custom-template .item-title,
+.autocomplete-custom-template .item-metadata {
+  display: block;
+  line-height: 2;
+}
+.autocomplete-custom-template .md-title md-icon {
+  height: 30px;
+  width: 30px;
+}
