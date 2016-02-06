@@ -15,6 +15,7 @@ angular.module 'Cinesponsable', [
   'Cinesponsable.alloCine'
   'Cinesponsable.showtime'
   'Cinesponsable.map'
+  'Cinesponsable.search'
 ]
 
 .config (
@@ -30,6 +31,10 @@ angular.module 'Cinesponsable', [
 
 .config ($mdGestureProvider) ->
   $mdGestureProvider.skipClickHijack()
+
+.config ($mdIconProvider) ->
+  $mdIconProvider
+  .defaultIconSet 'icons/mdi.light.svg'
 
 .config (
   $locationProvider

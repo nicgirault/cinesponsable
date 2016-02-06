@@ -9,10 +9,11 @@ angular.module 'Cinesponsable.map'
     userPosition:
       lat: currentPosition.latitude
       lng: currentPosition.longitude
-      zoom: 8
+      zoom: 13
     data: markers: {}
 
   markers = {}
+  $scope.theaters = theaters
   for theater in theaters
     markers[theater.code] =
       lat: theater.geopoint.latitude

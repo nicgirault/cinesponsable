@@ -1,0 +1,23 @@
+md-autocomplete(
+  md-no-cache='noCache'
+  md-selected-item='selectedItem'
+  md-search-text-change='searchTextChange(searchText)'
+  md-search-text='searchText'
+  md-selected-item-change='itemChange(item)'
+  md-items='item in theaters | filter:searchText'
+  md-item-text='item.name'
+  md-min-length='2'
+  placeholder='Chercher une salle'
+  md-menu-class='autocomplete-custom-template'
+)
+  md-item-template
+    span
+      strong
+        md-icon(md-svg-icon='map-marker-radius')
+        span(md-highlight-text="searchText" md-highlight-flags="gi")  {{item.name}} 
+    span.item-metastat
+      span(md-highlight-text="searchText" md-highlight-flags="gi")   {{ item.address }}, {{ item.locality.postalCode }} {{ item.locality.name }}
+    span.item-metastat(ng-if="item.screenNumber") -
+      strong  {{item.screenNumber}}
+      span(ng-if="item.screenNumber == 1")  écran
+      span(ng-if="item.screenNumber > 1")  écrans
