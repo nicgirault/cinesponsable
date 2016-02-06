@@ -105,7 +105,12 @@ angular.module('Cinesponsable.common').config(function($stateProvider) {
   return $stateProvider.state('base', {
     templateUrl: 'common/states/base/view.html',
     controller: 'BaseCtrl',
-    abstract: true
+    abstract: true,
+    resolve: {
+      theaters: function(Theater, position) {
+        return Theater.query();
+      }
+    }
   });
 });
 
@@ -118,9 +123,6 @@ angular.module('Cinesponsable.map').config(function($stateProvider) {
       tab: 'map'
     },
     resolve: {
-      theaters: function(Theater, position) {
-        return Theater.query();
-      },
       currentPosition: function(position) {
         return position.get().then(function(position) {
           return {
@@ -321,7 +323,8 @@ angular.module('Cinesponsable.theater').factory('Theater', function(Parse) {
   })(Parse.Model);
 });
 
-angular.module('Cinesponsable.common').controller('BaseCtrl', function($scope, $state) {
+angular.module('Cinesponsable.common').controller('BaseCtrl', function($scope, $state, theaters) {
+  $scope.theaters = theaters;
   $scope.state = $state;
   return console.log($state.current);
 });
@@ -338,8 +341,8 @@ angular.module('Cinesponsable.map').directive('mapPopup', function() {
   };
 });
 
-angular.module('Cinesponsable.map').controller('MapCtrl', function($scope, theaters, Theater, currentPosition) {
-  var markers, theater, _i, _len;
+angular.module('Cinesponsable.map').controller('MapCtrl', function($scope, Theater, currentPosition) {
+  var markers, theater, _i, _len, _ref;
   angular.extend($scope, {
     userPosition: {
       lat: currentPosition.latitude,
@@ -351,9 +354,9 @@ angular.module('Cinesponsable.map').controller('MapCtrl', function($scope, theat
     }
   });
   markers = {};
-  $scope.theaters = theaters;
-  for (_i = 0, _len = theaters.length; _i < _len; _i++) {
-    theater = theaters[_i];
+  _ref = $scope.theaters;
+  for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+    theater = _ref[_i];
     markers[theater.code] = {
       lat: theater.geopoint.latitude,
       lng: theater.geopoint.longitude,
@@ -375,7 +378,7 @@ angular.module('Cinesponsable.search').controller('searchBarCtrl', function($sco
   $scope.searchTextChange = function(text) {};
   $scope.itemChange = function(item) {
     var _ref;
-    if (((_ref = item.constructor) != null ? _ref.name : void 0) === 'Theater') {
+    if ((item != null ? (_ref = item.constructor) != null ? _ref.name : void 0 : void 0) === 'Theater') {
       $state.go('base.showtime', {
         theaterId: item.code
       });
