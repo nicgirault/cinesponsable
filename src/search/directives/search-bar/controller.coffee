@@ -4,7 +4,7 @@ angular.module 'Cinesponsable.search'
     return
 
   $scope.itemChange = (item) ->
-    if item.constructor?.name is 'Theater'
+    if item?.constructor?.name is 'Theater'
       $state.go 'base.showtime', theaterId: item.code
     return
 

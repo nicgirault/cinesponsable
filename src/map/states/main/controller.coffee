@@ -1,7 +1,6 @@
 angular.module 'Cinesponsable.map'
 .controller 'MapCtrl', (
   $scope
-  theaters
   Theater
   currentPosition
 ) ->
@@ -13,8 +12,7 @@ angular.module 'Cinesponsable.map'
     data: markers: {}
 
   markers = {}
-  $scope.theaters = theaters
-  for theater in theaters
+  for theater in $scope.theaters
     markers[theater.code] =
       lat: theater.geopoint.latitude
       lng: theater.geopoint.longitude

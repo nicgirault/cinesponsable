@@ -15,9 +15,9 @@ md-autocomplete(
       strong
         md-icon(md-svg-icon='map-marker-radius')
         span(md-highlight-text="searchText" md-highlight-flags="gi")  {{item.name}} 
-    span.item-metastat
-      span(md-highlight-text="searchText" md-highlight-flags="gi")   {{ item.address }}, {{ item.locality.postalCode }} {{ item.locality.name }}
-    span.item-metastat(ng-if="item.screenNumber") -
-      strong  {{item.screenNumber}}
-      span(ng-if="item.screenNumber == 1")  écran
-      span(ng-if="item.screenNumber > 1")  écrans
+    //- span.item-metastat
+    //-   span(md-highlight-text="searchText" md-highlight-flags="gi")   {{ item.address }}, {{ item.locality.postalCode }} {{ item.locality.name }}
+    //- span.item-metastat(ng-if="item.screenNumber") -
+    //-   strong  {{item.screenNumber}}
+    //-   span(ng-if="item.screenNumber == 1")  écran
+    //-   span(ng-if="item.screenNumber > 1")  écrans
