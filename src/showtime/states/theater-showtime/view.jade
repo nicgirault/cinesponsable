@@ -1,7 +1,7 @@
 h2.md-title A l'affiche
 p.md-subhead {{ theater.name }}
 
-md-grid-list(md-cols-xs='1', md-cols-sm='2', md-cols-md='4', md-cols-gt-md='6', md-row-height-gt-md='3:4', md-row-height='3:4', md-gutter='12px', md-gutter-gt-sm='8px')
+md-grid-list(md-cols-xs='2', md-cols-sm='2', md-cols-md='4', md-cols-gt-md='6', md-row-height-gt-md='3:4', md-row-height='3:4', md-gutter='12px', md-gutter-gt-sm='8px')
   md-grid-tile(
     ng-repeat="showtime in showtimes"
     ng-click="showDetails(showtime, $event)"
