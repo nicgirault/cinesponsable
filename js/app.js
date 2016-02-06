@@ -18,14 +18,6 @@ angular.module('Cinesponsable.showtime', []);
 
 angular.module('Cinesponsable.theater', []);
 
-angular.module('Cinesponsable.theater').config(function($stateProvider) {
-  return $stateProvider.state('base.admin', {
-    url: '/admin',
-    templateUrl: 'allo-cine/states/admin/view.html',
-    controller: 'AlloCineAdminCtrl'
-  });
-});
-
 angular.module('Cinesponsable.alloCine').service('AlloCine', function($resource, ALLOCINE_API_URL, ALLOCINE_PARTNER_TOKEN, Movie, $q) {
   var AlloCineMovieList, AlloCineShowTime, AlloCineTheater;
   AlloCineShowTime = $resource(ALLOCINE_API_URL + '/showtimelist?partner=:partner&format=json&theaters=:alloCineId');
@@ -103,10 +95,6 @@ angular.module('Cinesponsable.alloCine').service('AlloCine', function($resource,
       });
     }
   };
-});
-
-angular.module('Cinesponsable.alloCine').service('theaterIds', function() {
-  return ['P7912', 'P0212', 'P1347', 'P0155', 'P2014', 'P8740', 'W0132', 'P0987', 'P0448', 'claudine goiffon??', 'P0974', 'W0030', 'P0675', 'W2622', 'W0750', 'P2219', 'P2164', 'W0278', 'P0262', 'P1004', 'P2131', 'P4335', 'W2680', 'P0541', 'P2143', 'MJC', 'P7908', 'P2163', 'W1229', 'W2626', 'P4334', 'P8567', 'P0286', 'P2130', 'P0212', 'P2600', 'P7882'];
 });
 
 angular.module('Cinesponsable.common').config(function($stateProvider) {
@@ -327,47 +315,6 @@ angular.module('Cinesponsable.theater').factory('Theater', function(Parse) {
     return Theater;
 
   })(Parse.Model);
-});
-
-angular.module('Cinesponsable.alloCine').controller('AlloCineAdminCtrl', function($scope, theaterIds, AlloCine, Theater) {
-  $scope.fetchTheaters = function() {
-    var code, _i, _len, _results;
-    _results = [];
-    for (_i = 0, _len = theaterIds.length; _i < _len; _i++) {
-      code = theaterIds[_i];
-      console.log("handling " + code);
-      _results.push(AlloCine.getTheaterInfo(code).then(function(info) {
-        var theater, _ref, _ref1, _ref2;
-        if (!info) {
-          return;
-        }
-        theater = new Theater({
-          code: info.code,
-          name: info.name,
-          address: info.address,
-          locality: {
-            name: info.city,
-            postalCode: info.postalCode
-          },
-          state: info.area,
-          country: "France",
-          geopoint: new Parse.GeoPoint({
-            latitude: (_ref = info.geoloc) != null ? _ref.lat : void 0,
-            longitude: (_ref1 = info.geoloc) != null ? _ref1.long : void 0
-          }),
-          pictures: [],
-          hasPRMAccess: info.hasPRMAccess === 1 ? true : false,
-          screenNumber: info.screenCount
-        });
-        if (((_ref2 = info.picture) != null ? _ref2.href : void 0) != null) {
-          theater.pictures.push(info.picture.href);
-        }
-        return theater.save();
-      }));
-    }
-    return _results;
-  };
-  return $scope.fetchMovies = AlloCine.fetchMovies;
 });
 
 angular.module('Cinesponsable.common').controller('BaseCtrl', function($scope, $state) {
