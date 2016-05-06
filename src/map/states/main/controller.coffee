@@ -11,19 +11,19 @@ angular.module 'Cinesponsable.map'
       zoom: 13
     data: markers: {}
 
-  markers = {}
-  for theater in $scope.theaters
-    markers[theater.code] =
-      lat: theater.geopoint.latitude
-      lng: theater.geopoint.longitude
-      compileMessage: true
-      message: "<map-popup title='#{theater.name}' subtitle='#{theater.address} #{theater.locality.postalCode} #{theater.locality.name}' code='#{theater.code}'>"
+  Theater.query().$promise.then (theaters) ->
+    markers = {}
+    for theater in theaters
+      markers[theater.code] =
+        lat: theater.geopoint.lat
+        lng: theater.geopoint.lng
+        compileMessage: true
+        message: "<map-popup title='#{theater.name}' subtitle='#{theater.address} #{theater.postalCode} #{theater.city}' code='#{theater.code}'>"
+    $scope.theaters = theaters
 
-  $scope.addMarkers = ->
     $scope.data.markers = {}
     angular.extend $scope.data, markers: markers
     return
-  $scope.addMarkers()
 
   # $scope.events =
   #   dragend: (maps, eventName, args) ->

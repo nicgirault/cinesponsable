@@ -7,6 +7,3 @@ angular.module 'Cinesponsable.theater'
     controller: 'TheaterListCtrl'
     data:
       tab: 'theaters'
-    resolve:
-      theaters: (Theater) ->
-        Theater.query()

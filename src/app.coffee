@@ -15,6 +15,7 @@ angular.module 'Cinesponsable', [
   'Cinesponsable.showtime'
   'Cinesponsable.map'
   'Cinesponsable.search'
+  'Cinesponsable.constants'
 ]
 
 .config (

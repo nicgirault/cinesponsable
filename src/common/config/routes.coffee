@@ -8,6 +8,3 @@ angular.module 'Cinesponsable.common'
     templateUrl: 'common/states/base/view.html'
     controller: 'BaseCtrl'
     abstract: true
-    resolve:
-      theaters: (Theater, position) ->
-        Theater.query()
