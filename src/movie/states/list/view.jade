@@ -1,0 +1,19 @@
+md-grid-list(
+  md-cols-xs='2'
+  md-cols-sm='3'
+  md-cols-md='4'
+  md-cols-gt-md='6'
+  md-row-height-gt-md='3:4'
+  md-row-height='3:4'
+  md-gutter='12px'
+  md-gutter-sm='5px'
+  md-gutter-xs='2px'
+)
+  md-grid-tile(
+    ng-repeat="movie in movies"
+    ui-sref="base.showtimeList({movieId: movie.id})"
+    style="cursor: pointer;"
+  )
+    img(src="{{ movie.poster }}" width="100%" height="100%")
+    md-grid-tile-footer
+      h3 {{ movie.originalTitle }}

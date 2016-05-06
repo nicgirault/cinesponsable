@@ -1,3 +1,4 @@
 angular.module 'Cinesponsable.common'
-.controller 'BaseCtrl', ->
+.controller 'BaseCtrl', ($scope, $state) ->
+  $scope.state = $state
   return

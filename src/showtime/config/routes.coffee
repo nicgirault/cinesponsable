@@ -20,3 +20,8 @@ angular.module 'Cinesponsable.showtime'
         AlloCine.getTheaterInfo theater
     params:
       theater: null
+
+  .state 'base.showtimeList',
+    url: '/showtime?movieId'
+    templateUrl: 'showtime/states/list/view.html'
+    controller: 'ShowtimeListCtrl'

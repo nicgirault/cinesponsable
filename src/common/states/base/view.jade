@@ -7,6 +7,6 @@ header
   md-tabs(md-stretch-tabs="always")
     md-tab(ui-sref="base.map" md-active="state.current.data.tab == 'map'") Carte
     md-tab(ui-sref="base.theaters" md-active="state.current.data.tab == 'theaters'") Salles
-    md-tab(ui-sref="base.movies" ng-disabled="true" md-active="state.current.data.tab == 'movies'") Films
+    md-tab(ui-sref="base.movieList" md-active="state.current.data.tab == 'movies'") Films
 main(layout="column" flex="grow" style="height: 100%")
   .container(ui-view layout="column" flex="grow" style="height: 100%")

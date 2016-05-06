@@ -13,6 +13,7 @@ angular.module 'Cinesponsable', [
   'Cinesponsable.common'
   'Cinesponsable.theater'
   'Cinesponsable.showtime'
+  'Cinesponsable.movie'
   'Cinesponsable.map'
   'Cinesponsable.search'
   'Cinesponsable.constants'

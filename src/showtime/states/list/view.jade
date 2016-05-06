@@ -1,0 +1,7 @@
+md-list
+  md-list-item.md-2-line(ng-repeat="showtime in showtimes")
+    img.md-avatar(ng-src="{{ showtime.movie.poster }}")
+    .md-list-item-text
+      h3 {{ showtime.title }}
+      p {{ showtime.datetimeString }}
+    md-divider
