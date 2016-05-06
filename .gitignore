@@ -3,3 +3,8 @@ node_modules
 npm-debug.log
 public
 coverage
+prod.env
+devops/roles
+devops/hosts
+devops/*.retry
+src/ngConstants.js

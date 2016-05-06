@@ -1,0 +1,11 @@
+- name: Cinelocal deployment
+  hosts: all
+  tasks:
+    - name: Cinelocal container
+      docker:
+        name: cinelocal
+        image: nicgirault/cinelocal
+        state: reloaded
+        pull: always
+        ports:
+          - "8081:80"

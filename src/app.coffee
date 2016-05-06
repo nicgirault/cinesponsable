@@ -12,7 +12,6 @@ angular.module 'Cinesponsable', [
 
   'Cinesponsable.common'
   'Cinesponsable.theater'
-  'Cinesponsable.alloCine'
   'Cinesponsable.showtime'
   'Cinesponsable.map'
   'Cinesponsable.search'
