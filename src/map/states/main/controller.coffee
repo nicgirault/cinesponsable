@@ -23,6 +23,7 @@ angular.module 'Cinesponsable.map'
 
     $scope.data.markers = {}
     angular.extend $scope.data, markers: markers
+    $scope.ready = true
     return
 
   # $scope.events =

@@ -13,5 +13,3 @@ angular.module 'Cinesponsable.showtime'
     url: '/movie/:movieId/showtime'
     templateUrl: 'showtime/states/by-movie/view.html'
     controller: 'ShowtimeByMovieCtrl'
-    data:
-      tab: 'movies'

@@ -8,7 +8,10 @@ div(
 
 md-list
   md-list-item.md-2-line(ng-repeat="showtime in showtimes")
-    img.md-avatar(ng-src="{{ showtime.movie.poster }}")
+    img.md-avatar.clickable(
+      ng-src="{{ showtime.movie.poster }}"
+      ui-sref="base.movieDetails({movieId: showtime.movieId})"
+    )
     .md-list-item-text
       h3 {{ showtime.movie.originalTitle }}
       p {{ showtime.datetimeString }}
