@@ -5,4 +5,4 @@ angular.module 'Cinesponsable.map'
   scope:
     title: '@'
     subtitle: '@'
-    code: '@'
+    id: '@'

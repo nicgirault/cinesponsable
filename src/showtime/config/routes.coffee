@@ -4,24 +4,14 @@ angular.module 'Cinesponsable.showtime'
 ) ->
 
   $stateProvider
-  .state 'base.showtime',
+  .state 'base.showtimeByTheater',
     url: '/theater/:theaterId/showtime'
-    templateUrl: 'showtime/states/theater-showtime/view.html'
+    templateUrl: 'showtime/states/by-theater/view.html'
     controller: 'ShowtimeCtrl'
-    resolve:
-      showtimes: (Theater, AlloCine, $stateParams) ->
-        return null unless $stateParams.theaterId?
-        if $stateParams.theaterId?
-          AlloCine.getShowtimes $stateParams.theaterId
-      theater: (Theater, AlloCine, $stateParams) ->
-        return null unless $stateParams.theaterId?
-        theater =
-          alloCineId: $stateParams.theaterId
-        AlloCine.getTheaterInfo theater
-    params:
-      theater: null
 
-  .state 'base.showtimeList',
-    url: '/showtime?movieId'
-    templateUrl: 'showtime/states/list/view.html'
-    controller: 'ShowtimeListCtrl'
+  .state 'base.showtimeByMovie',
+    url: '/movie/:movieId/showtime'
+    templateUrl: 'showtime/states/by-movie/view.html'
+    controller: 'ShowtimeByMovieCtrl'
+    data:
+      tab: 'movies'

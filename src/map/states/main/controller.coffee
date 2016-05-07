@@ -18,7 +18,7 @@ angular.module 'Cinesponsable.map'
         lat: theater.geopoint.lat
         lng: theater.geopoint.lng
         compileMessage: true
-        message: "<map-popup title='#{theater.name}' subtitle='#{theater.address} #{theater.postalCode} #{theater.city}' code='#{theater.code}'>"
+        message: "<map-popup title='#{theater.name}' subtitle='#{theater.address} #{theater.postalCode} #{theater.city}' id='#{theater.id}'>"
     $scope.theaters = theaters
 
     $scope.data.markers = {}

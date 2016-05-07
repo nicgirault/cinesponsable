@@ -11,7 +11,7 @@ md-grid-list(
 )
   md-grid-tile(
     ng-repeat="movie in movies"
-    ui-sref="base.showtimeList({movieId: movie.id})"
+    ui-sref="base.showtimeByMovie({movieId: movie.id})"
     style="cursor: pointer;"
   )
     img(src="{{ movie.poster }}" width="100%" height="100%")

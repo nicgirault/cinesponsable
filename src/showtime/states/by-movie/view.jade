@@ -2,7 +2,7 @@ md-list
   md-list-item.md-2-line(ng-repeat="showtime in showtimes")
     img.md-avatar(ng-src="{{ showtime.movie.poster }}")
     .md-list-item-text
-      h3 {{ showtime.title }}
-      h4(ng-if="showtime.subtitle") {{ showtime.subtitle }}
+      h3 {{ showtime.theater.name }}
+      h4 à {{ showtime.theater.actualDistance.toFixed()}} kms
       p {{ showtime.datetimeString }}
     md-divider
