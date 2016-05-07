@@ -3,5 +3,6 @@ md-list
     img.md-avatar(ng-src="{{ showtime.movie.poster }}")
     .md-list-item-text
       h3 {{ showtime.title }}
+      h4(ng-if="showtime.subtitle") {{ showtime.subtitle }}
       p {{ showtime.datetimeString }}
     md-divider
