@@ -3,7 +3,7 @@
 ## Installation
 
 ```
-git clone git@github.com:theodo/cinesponsable.git
+git clone git@github.com:nicgirault/cinesponsable.git
 cd cinesponsable
 npm install
 ```
