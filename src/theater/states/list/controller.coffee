@@ -4,5 +4,4 @@ angular.module 'Cinesponsable.theater'
     $scope.theaters = theaters
 
   $scope.showtime = (theater) ->
-    console.log theater
     $state.go 'base.showtimeByTheater', {theaterId: theater.id}

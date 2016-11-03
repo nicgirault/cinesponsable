@@ -4,9 +4,4 @@ angular.module 'Cinesponsable.theater'
   $resource(
     "#{API_URL}/api/Theaters/:theaterId:action/:actionPerTheater",
     {theaterId: '@id'},
-    getOnTheBillMovies:
-      method: 'GET'
-      params:
-        actionPerTheater: 'on-the-bill'
-      isArray: true
   )
