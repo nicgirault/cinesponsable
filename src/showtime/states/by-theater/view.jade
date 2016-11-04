@@ -7,14 +7,18 @@ div(
   div.text-center Ce cinéma n'enregistre pas encore ses séances...
 
 div(layout="row" layout-wrap)
-  md-card(ng-repeat="movie in movies" flex-gt-md="33")
-    img.md-card-image(ng-src='{{ movie.poster }}', alt='movie poster')
-    md-card-title
-      md-card-title-text
-        span.md-headline {{ movie.originalTitle }}
-    md-card-actions(layout='row', layout-align='start center')
-      md-card-icon-actions
-        md-button(aria-label='Details' ui-sref="base.movieDetails({ movieId: movie.id })") Détails
-    md-card-content
-      ul
-        li(ng-repeat="showtime in showtimesByMovie[movie.id]") {{ showtime.datetimeString }}
+  div(
+    flex-gt-lg="20" flex-lg="25" flex-md="33" flex-sm="50" flex-xs="50" 
+    ng-repeat="movie in movies"
+  )
+    md-card
+      img.md-card-image(ng-src='{{ movie.poster }}', alt='movie poster')
+      md-card-title
+        md-card-title-text
+          span.md-headline {{ movie.originalTitle }}
+      md-card-actions(layout='row', layout-align='start center')
+        md-card-icon-actions
+          md-button(aria-label='Details' ui-sref="base.movieDetails({ movieId: movie.id })") Détails
+      md-card-content
+        ul
+          li(ng-repeat="showtime in showtimesByMovie[movie.id]") {{ showtime.datetimeString }}
