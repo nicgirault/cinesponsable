@@ -31,3 +31,14 @@ angular.module 'Cinesponsable', [
 ) ->
   $locationProvider.hashPrefix '!'
   $urlRouterProvider.otherwise '/map'
+
+.run ->
+  # http://stackoverflow.com/questions/10022156/underscore-js-groupby-multiple-values
+  _.groupByMulti = (obj, values, context) ->
+    if !values.length
+      return obj
+    byFirst = _.groupBy(obj, values[0], context)
+    rest = values.slice(1)
+    for prop of byFirst
+      byFirst[prop] = _.groupByMulti(byFirst[prop], rest, context)
+    byFirst
