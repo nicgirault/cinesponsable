@@ -1,6 +1,6 @@
 angular.module 'Cinesponsable.showtime'
 .controller 'ShowtimeByMovieCtrl', ($scope, $stateParams, Showtime, Position) ->
-
+  $scope.ready = false
   Position.get().then (position) ->
     Showtime.query(
       filter:
@@ -15,3 +15,4 @@ angular.module 'Cinesponsable.showtime'
         showtime.datetimeString = moment(showtime.datetime)
           .format('dddd D MMMM [à] HH[h]mm')
       $scope.showtimes = showtimes
+      $scope.ready = true

@@ -1,4 +1,10 @@
 div(
+  flex="grow" layout="row" layout-align="space-around center"
+  ng-if="!ready"
+)
+  md-progress-circular(md-mode="indeterminate")
+
+div(
   ng-if="ready && showtimes.length == 0"
   flex
   layout-align="center center"
@@ -6,9 +12,9 @@ div(
 )
   div.text-center Ce cinéma n'enregistre pas encore ses séances...
 
-div(layout="row" layout-wrap)
+div(layout="row" layout-wrap ng-if="ready")
   div(
-    flex-gt-lg="20" flex-lg="25" flex-md="33" flex-sm="50" flex-xs="50" 
+    flex-gt-lg="20" flex-lg="25" flex-md="33" flex-sm="50" flex-xs="100"
     ng-repeat="movie in movies"
     layout="column"
   )

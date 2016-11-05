@@ -280,17 +280,20 @@ angular.module('Cinesponsable.map').controller('MapCtrl', function($scope, Theat
 });
 
 angular.module('Cinesponsable.movie').controller('MovieDetailsCtrl', function($scope, $stateParams, Movie) {
-  console.log('in details');
+  $scope.ready = false;
   return Movie.get({
     movieId: $stateParams.movieId
   }).$promise.then(function(movie) {
-    return $scope.movie = movie;
+    $scope.movie = movie;
+    return $scope.ready = true;
   });
 });
 
 angular.module('Cinesponsable.movie').controller('MovielistCtrl', function($scope, Movie, position) {
+  $scope.ready = false;
   return Movie.onTheBill().$promise.then(function(movies) {
-    return $scope.movies = movies;
+    $scope.movies = movies;
+    return $scope.ready = true;
   });
 });
 
@@ -350,6 +353,7 @@ angular.module('Cinesponsable.search').directive('searchBar', function() {
 });
 
 angular.module('Cinesponsable.showtime').controller('ShowtimeByMovieCtrl', function($scope, $stateParams, Showtime, Position) {
+  $scope.ready = false;
   return Position.get().then(function(position) {
     return Showtime.query({
       filter: {
@@ -367,12 +371,13 @@ angular.module('Cinesponsable.showtime').controller('ShowtimeByMovieCtrl', funct
       showtime = showtimes[_i];
       showtime.datetimeString = moment(showtime.datetime).format('dddd D MMMM [à] HH[h]mm');
     }
-    return $scope.showtimes = showtimes;
+    $scope.showtimes = showtimes;
+    return $scope.ready = true;
   });
 });
 
-angular.module('Cinesponsable.showtime').controller('ShowtimeCtrl', function($scope, $mdMedia, $mdDialog, $stateParams, Showtime, Movie) {
-  console.log(moment().add(1, 'days').toDate());
+angular.module('Cinesponsable.showtime').controller('ShowtimeCtrl', function($scope, $stateParams, Showtime, Movie) {
+  $scope.ready = false;
   return Showtime.query({
     filter: {
       where: {
@@ -410,7 +415,6 @@ angular.module('Cinesponsable.showtime').controller('ShowtimeCtrl', function($sc
       return moment(showtime.datetime).format('DD-MM-YY');
     };
     groupedShowtimes = _.groupByMulti(showtimes, ['movieId', 'language', groupByDay]);
-    console.log(groupedShowtimes);
     $scope.groupedShowtimes = groupedShowtimes;
     return Movie.query({
       filter: {
@@ -468,8 +472,10 @@ angular.module('Cinesponsable.showtime').controller('DetailsCtrl', function($sco
 });
 
 angular.module('Cinesponsable.theater').controller('TheaterListCtrl', function($scope, $state, Theater) {
+  $scope.ready = false;
   Theater.query().$promise.then(function(theaters) {
-    return $scope.theaters = theaters;
+    $scope.theaters = theaters;
+    return $scope.ready = true;
   });
   return $scope.showtime = function(theater) {
     return $state.go('base.showtimeByTheater', {

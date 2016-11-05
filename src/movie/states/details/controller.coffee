@@ -4,6 +4,8 @@ angular.module 'Cinesponsable.movie'
   $stateParams
   Movie
 ) ->
-  console.log 'in details'
+  $scope.ready = false
+
   Movie.get(movieId: $stateParams.movieId).$promise.then (movie) ->
     $scope.movie = movie
+    $scope.ready = true

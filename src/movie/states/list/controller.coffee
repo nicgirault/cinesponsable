@@ -4,6 +4,8 @@ angular.module 'Cinesponsable.movie'
   Movie
   position
 ) ->
+  $scope.ready = false
+
   Movie.onTheBill().$promise.then (movies) ->
     $scope.movies = movies
-    
+    $scope.ready = true

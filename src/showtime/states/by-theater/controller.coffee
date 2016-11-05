@@ -1,13 +1,11 @@
 angular.module 'Cinesponsable.showtime'
 .controller 'ShowtimeCtrl', (
   $scope
-  $mdMedia
-  $mdDialog
   $stateParams
   Showtime
   Movie
 ) ->
-  console.log moment().add(1, 'days').toDate()
+  $scope.ready = false
   Showtime.query
     filter:
       where:
@@ -29,7 +27,6 @@ angular.module 'Cinesponsable.showtime'
     groupByDay = (showtime) ->
       moment(showtime.datetime).format('DD-MM-YY')
     groupedShowtimes = _.groupByMulti showtimes, ['movieId', 'language', groupByDay]
-    console.log groupedShowtimes
     $scope.groupedShowtimes = groupedShowtimes
     Movie.query
       filter:
