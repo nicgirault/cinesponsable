@@ -1,0 +1,43 @@
+.clickable {
+  cursor: pointer;
+}
+
+md-grid-list md-grid-tile md-grid-tile-footer,
+md-grid-list md-grid-tile md-grid-tile-header {
+  background: rgba(0, 0, 0, 0.6);
+}
+html {
+  height: 100%;
+}
+.angular-leaflet-map {
+  height: 100%;
+}
+.leaflet-popup-content-wrapper {
+  border-radius: 0px;
+}
+.md-autocomplete-suggestions-container li {
+  color: black;
+}
+.md-autocomplete-suggestions-container li .highlight {
+  color: #1a69cd;
+  font-weight: bold;
+}
+.autocomplete-custom-template li {
+  border-bottom: 1px solid #ccc;
+  height: auto;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  white-space: normal;
+}
+.autocomplete-custom-template li:last-child {
+  border-bottom-width: 0;
+}
+.autocomplete-custom-template .item-title,
+.autocomplete-custom-template .item-metadata {
+  display: block;
+  line-height: 2;
+}
+.autocomplete-custom-template .md-title md-icon {
+  height: 30px;
+  width: 30px;
+}
