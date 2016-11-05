@@ -1,4 +1,6 @@
-# Cinesponsable [![Circle CI](https://circleci.com/gh/nicgirault/cinesponsable.svg?style=svg)](https://circleci.com/gh/nicgirault/cinesponsable)
+# IndéCiné
+
+*Pour trouver une séance dans un cinéma indépendant*
 
 ## Installation
 
@@ -10,4 +12,10 @@ npm install
 
 ## Deploy
 
-`gulp deploy`
+### Requirements
+
+To deploy the app on stores, please use Fastlane. On Debian:
+
+`sudo apt-get install ruby-dev && sudo gem install fastlane --verbose`
+
+To deploy the app on Github pages, just push the code on the repository

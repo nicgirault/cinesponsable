@@ -1,6 +1,6 @@
 angular.module 'Cinesponsable.showtime'
 .controller 'ShowtimeByMovieCtrl', ($scope, $stateParams, Showtime, Position) ->
-  $scope.ready = false
+
   Position.get().then (position) ->
     Showtime.query(
       filter:
@@ -11,8 +11,8 @@ angular.module 'Cinesponsable.showtime'
       position: "#{position.lat};#{position.lng}"
     ).$promise
   .then (showtimes) ->
-      for showtime in showtimes
-        showtime.datetimeString = moment(showtime.datetime)
-          .format('dddd D MMMM [à] HH[h]mm')
-      $scope.showtimes = showtimes
-      $scope.ready = true
+    groupByDay = (showtime) ->
+      moment(showtime.datetime).format('DD-MM-YY')
+    $scope.groupedShowtimes = _.groupByMulti showtimes, ['theaterId', 'language', groupByDay]
+
+    $scope.ready = true

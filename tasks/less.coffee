@@ -1,4 +1,4 @@
-less = require('gulp-less');
+less = require 'gulp-less'
 concat = require 'gulp-concat'
 
 gulp.task 'less', (done) ->

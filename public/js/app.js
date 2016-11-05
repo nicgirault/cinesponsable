@@ -46,6 +46,16 @@ angular.module('Cinesponsable.common').config(function($stateProvider) {
   });
 });
 
+angular.module('Cinesponsable.common').filter('htmlToPlaintext', function() {
+  return function(text) {
+    if (text) {
+      return String(text).replace(/<[^>]+>/gm, '');
+    } else {
+      return '';
+    }
+  };
+});
+
 angular.module('Cinesponsable.common').service('Position', function(position) {
   return {
     get: function() {
@@ -353,7 +363,6 @@ angular.module('Cinesponsable.search').directive('searchBar', function() {
 });
 
 angular.module('Cinesponsable.showtime').controller('ShowtimeByMovieCtrl', function($scope, $stateParams, Showtime, Position) {
-  $scope.ready = false;
   return Position.get().then(function(position) {
     return Showtime.query({
       filter: {
@@ -366,12 +375,11 @@ angular.module('Cinesponsable.showtime').controller('ShowtimeByMovieCtrl', funct
       position: "" + position.lat + ";" + position.lng
     }).$promise;
   }).then(function(showtimes) {
-    var showtime, _i, _len;
-    for (_i = 0, _len = showtimes.length; _i < _len; _i++) {
-      showtime = showtimes[_i];
-      showtime.datetimeString = moment(showtime.datetime).format('dddd D MMMM [à] HH[h]mm');
-    }
-    $scope.showtimes = showtimes;
+    var groupByDay;
+    groupByDay = function(showtime) {
+      return moment(showtime.datetime).format('DD-MM-YY');
+    };
+    $scope.groupedShowtimes = _.groupByMulti(showtimes, ['theaterId', 'language', groupByDay]);
     return $scope.ready = true;
   });
 });

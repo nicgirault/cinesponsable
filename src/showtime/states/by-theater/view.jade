@@ -23,7 +23,7 @@ div(layout="row" layout-wrap ng-if="ready")
       md-card-title(flex="initial" ui-sref="base.movieDetails({ movieId: movie.id })")
         md-card-title-text
           span.md-headline {{ movie.originalTitle }}
-          span.md-subhead {{ movie.synopsis }}
+          span.md-subhead {{ movie.synopsis | htmlToPlaintext }}
       md-card-content
         div(ng-repeat="(language, showtimesByLanguage) in groupedShowtimes[movie.id]")
           h3 {{ language }}
