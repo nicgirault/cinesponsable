@@ -20,12 +20,10 @@ div(layout="row" layout-wrap ng-if="ready")
   )
     md-card(flex="grow" layout="column" layout-align="start")
       img.md-card-image(ng-src='{{ movie.poster }}', alt='movie poster' )
-      md-card-title(flex="initial")
+      md-card-title(flex="initial" ui-sref="base.movieDetails({ movieId: movie.id })")
         md-card-title-text
           span.md-headline {{ movie.originalTitle }}
-      md-card-actions(layout='row', layout-align='start center')
-        md-card-icon-actions
-          md-button(aria-label='Details' ui-sref="base.movieDetails({ movieId: movie.id })") Détails
+          span.md-subhead {{ movie.synopsis }}
       md-card-content
         div(ng-repeat="(language, showtimesByLanguage) in groupedShowtimes[movie.id]")
           h3 {{ language }}
