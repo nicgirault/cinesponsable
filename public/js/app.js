@@ -471,9 +471,20 @@ angular.module('Cinesponsable.showtime').controller('DetailsCtrl', function($sco
   };
 });
 
-angular.module('Cinesponsable.theater').controller('TheaterListCtrl', function($scope, $state, Theater) {
+angular.module('Cinesponsable.theater').controller('TheaterListCtrl', function($scope, $state, Theater, Position) {
   $scope.ready = false;
-  Theater.query().$promise.then(function(theaters) {
+  Position.get().then(function(position) {
+    return Theater.query({
+      filter: {
+        where: {
+          geopoint: {
+            near: [position.lat, position.lng]
+          }
+        },
+        limit: 20
+      }
+    }).$promise;
+  }).then(function(theaters) {
     $scope.theaters = theaters;
     return $scope.ready = true;
   });

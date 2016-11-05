@@ -1,7 +1,15 @@
 angular.module 'Cinesponsable.theater'
-.controller 'TheaterListCtrl', ($scope, $state, Theater) ->
+.controller 'TheaterListCtrl', ($scope, $state, Theater, Position) ->
   $scope.ready = false
-  Theater.query().$promise.then (theaters) ->
+  Position.get().then (position) ->
+    Theater.query
+      filter:
+        where:
+          geopoint:
+            near: [position.lat, position.lng]
+        limit: 20
+    .$promise
+  .then (theaters) ->
     $scope.theaters = theaters
     $scope.ready = true
 
