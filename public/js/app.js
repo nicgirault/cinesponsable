@@ -1,3 +1,8 @@
+angular.module("Cinesponsable.constants", [])
+
+.constant("API_URL", "//62.4.23.200:8000")
+
+;
 'use strict';
 angular.module('Cinesponsable', ['ng', 'ngResource', 'ngAnimate', 'ngMaterial', 'ui.router', 'app.templates', 'leaflet-directive', 'Cinesponsable.common', 'Cinesponsable.theater', 'Cinesponsable.showtime', 'Cinesponsable.movie', 'Cinesponsable.map', 'Cinesponsable.search', 'Cinesponsable.constants']).config(function($mdGestureProvider) {
   return $mdGestureProvider.skipClickHijack();
@@ -21,11 +26,6 @@ angular.module('Cinesponsable', ['ng', 'ngResource', 'ngAnimate', 'ngMaterial', 
   };
 });
 
-angular.module("Cinesponsable.constants", [])
-
-.constant("API_URL", "http://62.4.23.200:8000")
-
-;
 angular.module('Cinesponsable.common', []);
 
 angular.module('Cinesponsable.map', []);
