@@ -12,6 +12,6 @@ gulp.task 'coffee-public', ['env'], (done) ->
   .pipe addsrc ['src/**/*.js', '!src/**/*test.js']
   .pipe concat 'app.js'
   .on 'error', gutil.log
-  .pipe gulp.dest 'public/js/'
+  .pipe gulp.dest 'www/js/'
   .on 'end', done
   return

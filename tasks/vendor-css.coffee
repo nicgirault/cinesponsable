@@ -11,6 +11,6 @@ gulp.task 'vendor-css', (done) ->
   ]
   .pipe(concat('vendor.css'))
   .on 'error', gutil.log
-  .pipe gulp.dest('public/css')
+  .pipe gulp.dest('www/css')
   .on 'end', done
   return

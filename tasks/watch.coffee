@@ -3,7 +3,7 @@ webserver = require 'gulp-webserver'
 runSequence = require 'run-sequence'
 
 gulp.task 'webserver', ['build'], ->
-  gulp.src 'public'
+  gulp.src 'www'
   .pipe webserver
       livereload: true
       fallback: 'index.html'

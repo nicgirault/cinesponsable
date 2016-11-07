@@ -8,3 +8,6 @@ devops/hosts
 devops/*.retry
 src/ngConstants.js
 playStore.json
+phonegap.keystore
+platforms
+plugins

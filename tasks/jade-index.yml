@@ -1,5 +1,5 @@
 src: src/index.jade
-dest: public/
+dest: www/
 
 cache: true
 
