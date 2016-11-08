@@ -1,6 +1,7 @@
-build-production:
-	 . ./prod.env && ./node_modules/.bin/gulp build && docker build -t nicgirault/cinelocal .
-push: build-production
+build:
+	eval "$$(docker-machine env -u)" && \
+	docker-compose --file docker-compose.build.yml up appbuilder && \
+	docker build -t nicgirault/cinelocal .
+
+push:
 	docker push nicgirault/cinelocal
-deploy: push
-	ansible-playbook -i devops/hosts/production devops/deploy.yml

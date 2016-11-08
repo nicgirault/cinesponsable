@@ -1,6 +1,6 @@
 angular.module("Cinesponsable.constants", [])
 
-.constant("API_URL", "//62.4.23.200:8000")
+.constant("API_URL", "https://api.indecine.fr")
 
 ;
 'use strict';

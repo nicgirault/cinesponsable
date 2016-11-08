@@ -1,0 +1,8 @@
+appbuilder:
+  image: node:6.2
+  volumes:
+    - .:/app
+  working_dir: /app
+  environment:
+    API_URL: "https://api.indecine.fr"
+  command: "npm install --unsafe-perm --quiet"
