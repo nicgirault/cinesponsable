@@ -22,15 +22,16 @@
   "dependencies": {
     "angular-ui-router": "0.2.15",
     "angular": "1.4.9",
-    "lodash": "3.8.0",
     "moment": "2.10.6",
     "angular-resource": "1.4.9",
     "angular-material": "1.0.3",
     "angular-leaflet-directive": "0.10.0",
     "leaflet": "0.7.7",
-    "angular-openlayers-directive": "^1.8.2"
+    "angular-openlayers-directive": "^1.8.2",
+    "lodash": "~4.16.6"
   },
   "resolutions": {
-    "angular": "1.5.8"
+    "angular": "1.5.8",
+    "lodash": "~4.16.6"
   }
 }

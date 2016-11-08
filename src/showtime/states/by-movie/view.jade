@@ -1,38 +1,32 @@
-div(
-  flex="grow" layout="row" layout-align="space-around center"
-  ng-if="!ready"
-)
-  md-progress-circular(md-mode="indeterminate")
+md-toolbar
+  .md-toolbar-tools
+    md-button.md-icon-button(aria-label='back' ng-click="back()")
+      md-icon(md-svg-icon='arrow-left')
+    h2
+      span {{ movie.originalTitle }}
 
-md-list(ng-if="ready")
-  md-list-item.md-2-line(ng-repeat="showtime in showtimes")
-    img.md-avatar.clickable(
-      ng-src="{{ showtime.movie.poster }}"
-      ui-sref="base.movieDetails({movieId: showtime.movieId})"
-    )
-    .md-list-item-text
-      h3 {{ showtime.theater.name }}
-      h4 à {{ showtime.theater.actualDistance.toFixed()}} kms
-      p {{ showtime.datetimeString }}
-    md-divider
-
-//- div(layout="row" layout-wrap ng-if="ready")
-//-   div(
-//-     flex-gt-lg="20" flex-lg="25" flex-md="33" flex-sm="50" flex-xs="100"
-//-     ng-repeat="showtimesByTheater in groupedShowtimes"
-//-     layout="column"
-//-   )
-//-     md-card(flex="grow" layout="column" layout-align="start")
-//-       md-card-title(flex="initial")
-//-         md-card-title-text
-//-           span.md-headline {{ movie.originalTitle }}
-//-           span.md-subhead {{ movie.synopsis | htmlToPlaintext }}
-//-       md-card-content
-//-         div(ng-repeat="(language, showtimesByLanguage) in groupedShowtimes[movie.id]")
-//-           h3 {{ language }}
-//-           span(ng-repeat="(day, showtimesByDay) in groupedShowtimes[movie.id][language]")
-//-             | {{ showtimesByDay[0].day }}: 
-//-             span(ng-repeat="showtimes in groupedShowtimes[movie.id][language][day]")
-//-               | {{ showtimes.datetime | date : "H'h'mm" }}
-//-               span(ng-if="!$last") , 
-//-             hr(ng-if="!$last")
+div(layout="row" layout-wrap ng-if="ready")
+  div.md-padding
+    span.md-subhead {{ movie.synopsis | htmlToPlaintext }}
+  div(
+    flex-gt-lg="20" flex-lg="25" flex-md="33" flex-sm="50" flex-xs="100"
+    ng-repeat="(theaterId, showtimesByTheater) in groupedShowtimes"
+    layout="column"
+  )
+    md-card(flex="grow" layout="column" layout-align="start")
+      md-card-title(flex="initial" layout="row")
+        md-card-title-text(flex)
+          span.md-headline {{ theaters[theaterId].theater.name }}
+          span.md-subhead {{ theaters[theaterId].theater.address }} {{ theaters[theaterId].theater.postalCode }} {{ theaters[theaterId].theater.city }}
+        div(flex)
+        a.md-icon-button(target="_blank" href="//maps.google.com/?q={{ theaters[theaterId].theater.geopoint.lat }},{{ theaters[theaterId].theater.geopoint.lng }}")
+          md-icon(md-svg-icon='google-maps')
+      md-card-content
+        div(ng-repeat="(language, showtimesByLanguage) in groupedShowtimes[theaterId]")
+          h3 {{ language }}
+          span(ng-repeat="(day, showtimesByDay) in groupedShowtimes[theaterId][language]")
+            | {{ showtimesByDay[0].day }}: 
+            span(ng-repeat="showtimes in groupedShowtimes[theaterId][language][day]")
+              | {{ showtimes.datetime | date : "H'h'mm" }}
+              span(ng-if="!$last") , 
+            hr(ng-if="!$last")

@@ -10,7 +10,7 @@ gulp.task 'vendor', (done) ->
     'bower_components/angular-aria/angular-aria.min.js'
     'bower_components/angular-material/angular-material.min.js'
     'bower_components/angular-ui-router/release/angular-ui-router.min.js'
-    'bower_components/lodash/lodash.min.js'
+    'bower_components/lodash/dist/lodash.min.js'
     'bower_components/leaflet/dist/leaflet.js'
     'bower_components/angular-leaflet-directive/dist/angular-leaflet-directive.min.js'
     'bower_components/moment/min/moment.min.js'

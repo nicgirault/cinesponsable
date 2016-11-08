@@ -1,8 +1,3 @@
-angular.module("Cinesponsable.constants", [])
-
-.constant("API_URL", "//api.indecine.fr")
-
-;
 'use strict';
 angular.module('Cinesponsable', ['ng', 'ngResource', 'ngAnimate', 'ngMaterial', 'ui.router', 'app.templates', 'leaflet-directive', 'Cinesponsable.common', 'Cinesponsable.theater', 'Cinesponsable.showtime', 'Cinesponsable.movie', 'Cinesponsable.map', 'Cinesponsable.search', 'Cinesponsable.constants']).config(function($mdGestureProvider) {
   return $mdGestureProvider.skipClickHijack();
@@ -26,6 +21,11 @@ angular.module('Cinesponsable', ['ng', 'ngResource', 'ngAnimate', 'ngMaterial', 
   };
 });
 
+angular.module("Cinesponsable.constants", [])
+
+.constant("API_URL", "//api.indecine.fr")
+
+;
 angular.module('Cinesponsable.common', []);
 
 angular.module('Cinesponsable.map', []);
@@ -373,26 +373,52 @@ angular.module('Cinesponsable.search').directive('searchBar', function() {
   };
 });
 
-angular.module('Cinesponsable.showtime').controller('ShowtimeByMovieCtrl', function($scope, $stateParams, Showtime, Position) {
-  return Position.get().then(function(position) {
-    return Showtime.query({
-      filter: {
-        include: ['movie', 'theater'],
-        where: {
-          movieId: $stateParams.movieId
-        },
-        order: 'datetime ASC'
-      },
-      position: "" + position.lat + ";" + position.lng
-    }).$promise;
-  }).then(function(showtimes) {
-    var groupByDay;
+angular.module('Cinesponsable.showtime').controller('ShowtimeByMovieCtrl', function($scope, $q, $stateParams, $window, Showtime, Movie, Position) {
+  $scope.ready = false;
+  Position.get().then(function(position) {
+    return $q.all([
+      Showtime.query({
+        filter: {
+          include: 'theater',
+          where: {
+            movieId: $stateParams.movieId,
+            and: [
+              {
+                datetime: {
+                  gt: new Date()
+                }
+              }, {
+                datetime: {
+                  lt: moment().add(7, 'days').toDate()
+                }
+              }
+            ],
+            order: 'datetime ASC',
+            position: "" + position.lat + ";" + position.lng
+          }
+        }
+      }).$promise, Movie.get({
+        movieId: $stateParams.movieId
+      }).$promise
+    ]);
+  }).then(function(_arg) {
+    var groupByDay, movie, showtime, showtimes, _i, _len;
+    showtimes = _arg[0], movie = _arg[1];
+    for (_i = 0, _len = showtimes.length; _i < _len; _i++) {
+      showtime = showtimes[_i];
+      showtime.day = moment(showtime.datetime).format('dddd D MMMM');
+    }
+    $scope.theaters = _.keyBy(showtimes, 'theaterId');
+    $scope.movie = movie;
     groupByDay = function(showtime) {
       return moment(showtime.datetime).format('DD-MM-YY');
     };
     $scope.groupedShowtimes = _.groupByMulti(showtimes, ['theaterId', 'language', groupByDay]);
     return $scope.ready = true;
   });
+  return $scope.back = function() {
+    return $window.history.back();
+  };
 });
 
 angular.module('Cinesponsable.showtime').controller('ShowtimeCtrl', function($scope, $stateParams, Showtime, Movie) {
