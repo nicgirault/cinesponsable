@@ -1,6 +1,6 @@
 angular.module("Cinesponsable.constants", [])
 
-.constant("API_URL", "https://api.indecine.fr")
+.constant("API_URL", "//api.indecine.fr")
 
 ;
 'use strict';
@@ -43,6 +43,10 @@ angular.module('Cinesponsable.common').config(function($stateProvider) {
     templateUrl: 'common/states/base/view.html',
     controller: 'BaseCtrl',
     abstract: true
+  }).state('base.tabs', {
+    templateUrl: 'common/states/tabs/view.html',
+    controller: 'TabsCtrl',
+    abstract: true
   });
 });
 
@@ -75,7 +79,7 @@ angular.module('Cinesponsable.common').service('Position', function(position) {
 });
 
 angular.module('Cinesponsable.map').config(function($stateProvider) {
-  return $stateProvider.state('base.map', {
+  return $stateProvider.state('base.tabs.map', {
     url: '/map',
     templateUrl: 'map/states/main/view.html',
     controller: 'MapCtrl',
@@ -124,7 +128,10 @@ angular.module('Cinesponsable.movie').config(function($stateProvider) {
   return $stateProvider.state('base.movieList', {
     url: '/movie',
     templateUrl: 'movie/states/list/view.html',
-    controller: 'MovielistCtrl'
+    controller: 'MovielistCtrl',
+    data: {
+      tab: 'movies'
+    }
   }).state('base.movieDetails', {
     url: '/movie/:movieId',
     templateUrl: 'movie/states/details/view.html',
@@ -225,7 +232,7 @@ angular.module('Cinesponsable.theater').service('Showtime', function($resource, 
 });
 
 angular.module('Cinesponsable.theater').config(function($stateProvider) {
-  return $stateProvider.state('base.theaters', {
+  return $stateProvider.state('base.tabs.theaters', {
     url: '/theaters',
     templateUrl: 'theater/states/list/view.html',
     controller: 'TheaterListCtrl',
@@ -242,6 +249,10 @@ angular.module('Cinesponsable.theater').service('Theater', function($resource, A
 });
 
 angular.module('Cinesponsable.common').controller('BaseCtrl', function($scope, $state) {
+  $scope.state = $state;
+});
+
+angular.module('Cinesponsable.common').controller('TabsCtrl', function($scope, $state) {
   $scope.state = $state;
 });
 

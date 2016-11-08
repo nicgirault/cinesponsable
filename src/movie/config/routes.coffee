@@ -7,6 +7,8 @@ angular.module 'Cinesponsable.movie'
     url: '/movie'
     templateUrl: 'movie/states/list/view.html'
     controller: 'MovielistCtrl'
+    data:
+      tab: 'movies'
 
   .state 'base.movieDetails',
     url: '/movie/:movieId'

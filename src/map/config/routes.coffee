@@ -3,7 +3,7 @@ angular.module 'Cinesponsable.map'
   $stateProvider
 ) ->
   $stateProvider
-  .state 'base.map',
+  .state 'base.tabs.map',
     url: '/map'
     templateUrl: 'map/states/main/view.html'
     controller: 'MapCtrl'

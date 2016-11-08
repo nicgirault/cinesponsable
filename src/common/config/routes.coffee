@@ -8,3 +8,8 @@ angular.module 'Cinesponsable.common'
     templateUrl: 'common/states/base/view.html'
     controller: 'BaseCtrl'
     abstract: true
+
+  .state 'base.tabs',
+    templateUrl: 'common/states/tabs/view.html'
+    controller: 'TabsCtrl'
+    abstract: true
