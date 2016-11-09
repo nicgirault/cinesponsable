@@ -16,7 +16,10 @@
     <icon src="src/assets/images/logo.png" />
     <platform name="android">
         <splash src="src/assets/images/logo.png" />
+        <preference name="SplashScreenBackgroundColor" value="#dddddd" />
     </platform>
+
+
 
     <access origin="*" />
     <allow-intent href="http://*/*" />
