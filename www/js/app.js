@@ -1,8 +1,3 @@
-angular.module("Cinesponsable.constants", [])
-
-.constant("API_URL", "https://api.indecine.fr")
-
-;
 'use strict';
 angular.module('Cinesponsable', ['ng', 'ngResource', 'ngAnimate', 'ngMaterial', 'ui.router', 'app.templates', 'leaflet-directive', 'Cinesponsable.common', 'Cinesponsable.theater', 'Cinesponsable.showtime', 'Cinesponsable.movie', 'Cinesponsable.map', 'Cinesponsable.search', 'Cinesponsable.constants']).config(function($mdGestureProvider) {
   return $mdGestureProvider.skipClickHijack();
@@ -26,6 +21,11 @@ angular.module('Cinesponsable', ['ng', 'ngResource', 'ngAnimate', 'ngMaterial', 
   };
 });
 
+angular.module("Cinesponsable.constants", [])
+
+.constant("API_URL", "//api.indecine.fr")
+
+;
 angular.module('Cinesponsable.common', []);
 
 angular.module('Cinesponsable.map', []);
@@ -313,6 +313,14 @@ angular.module('Cinesponsable.movie').controller('MovieDetailsCtrl', function($s
 angular.module('Cinesponsable.movie').controller('MovielistCtrl', function($scope, Movie, position) {
   $scope.ready = false;
   return Movie.onTheBill().$promise.then(function(movies) {
+    var movie, url, _i, _len;
+    for (_i = 0, _len = movies.length; _i < _len; _i++) {
+      movie = movies[_i];
+      if (movie.poster != null) {
+        url = movie.poster.split('/');
+        url.splice(3, 0, 'cx_240_320');
+      }
+    }
     $scope.movies = movies;
     return $scope.ready = true;
   });

@@ -7,5 +7,9 @@ angular.module 'Cinesponsable.movie'
   $scope.ready = false
 
   Movie.onTheBill().$promise.then (movies) ->
+    for movie in movies
+      if movie.poster?
+        url = movie.poster.split('/')
+        url.splice(3, 0, 'cx_240_320')
     $scope.movies = movies
     $scope.ready = true
