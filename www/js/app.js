@@ -261,19 +261,6 @@ angular.module('Cinesponsable.theater').service('Theater', function($resource, A
   });
 });
 
-angular.module('Cinesponsable.theater').service('TheaterService', function(Theater) {
-  var theaterList;
-  theaterList = null;
-  return {
-    query: function() {
-      if (theaterList == null) {
-        theaterList = Theater.query().$promise;
-      }
-      return theaterList;
-    }
-  };
-});
-
 angular.module('Cinesponsable.common').controller('BaseCtrl', function($scope, $state) {
   $scope.state = $state;
 });

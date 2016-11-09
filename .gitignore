@@ -1,4 +1,5 @@
 bower_components
+fastlane/report.xml
 node_modules
 npm-debug.log
 coverage
