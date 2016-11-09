@@ -153,6 +153,19 @@ angular.module('Cinesponsable.theater').service('Movie', function($resource, API
   });
 });
 
+angular.module('Cinesponsable.theater').service('MovieService', function(Movie) {
+  var onTheBillMovies;
+  onTheBillMovies = null;
+  return {
+    onTheBill: function() {
+      if (onTheBillMovies == null) {
+        onTheBillMovies = Movie.onTheBill().$promise;
+      }
+      return onTheBillMovies;
+    }
+  };
+});
+
 angular.module('Cinesponsable.showtime').run(function() {
   return moment.locale('fr', {
     months: 'janvier_février_mars_avril_mai_juin_juillet_août_septembre_octobre_novembre_décembre'.split('_'),
@@ -248,6 +261,19 @@ angular.module('Cinesponsable.theater').service('Theater', function($resource, A
   });
 });
 
+angular.module('Cinesponsable.theater').service('TheaterService', function(Theater) {
+  var theaterList;
+  theaterList = null;
+  return {
+    query: function() {
+      if (theaterList == null) {
+        theaterList = Theater.query().$promise;
+      }
+      return theaterList;
+    }
+  };
+});
+
 angular.module('Cinesponsable.common').controller('BaseCtrl', function($scope, $state) {
   $scope.state = $state;
 });
@@ -310,9 +336,9 @@ angular.module('Cinesponsable.movie').controller('MovieDetailsCtrl', function($s
   });
 });
 
-angular.module('Cinesponsable.movie').controller('MovielistCtrl', function($scope, Movie, position) {
+angular.module('Cinesponsable.movie').controller('MovielistCtrl', function($scope, MovieService, position) {
   $scope.ready = false;
-  return Movie.onTheBill().$promise.then(function(movies) {
+  return MovieService.onTheBill().then(function(movies) {
     var movie, url, _i, _len;
     for (_i = 0, _len = movies.length; _i < _len; _i++) {
       movie = movies[_i];

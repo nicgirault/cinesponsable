@@ -1,12 +1,12 @@
 angular.module 'Cinesponsable.movie'
 .controller 'MovielistCtrl', (
   $scope
-  Movie
+  MovieService
   position
 ) ->
   $scope.ready = false
 
-  Movie.onTheBill().$promise.then (movies) ->
+  MovieService.onTheBill().then (movies) ->
     for movie in movies
       if movie.poster?
         url = movie.poster.split('/')
