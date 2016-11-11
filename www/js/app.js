@@ -100,9 +100,8 @@ angular.module('Cinesponsable.map').service('position', function($q) {
         console.warn(err);
         return deferred.reject(err);
       }, {
-        enableHighAccuracy: true,
-        timeout: 5000,
-        maximumAge: 0
+        timeout: 20000,
+        maximumAge: 10000
       });
       return deferred.promise;
     }
@@ -266,7 +265,7 @@ angular.module('Cinesponsable.map').directive('mapPopup', function() {
   };
 });
 
-angular.module('Cinesponsable.map').controller('MapCtrl', function($scope, Theater, Position) {
+angular.module('Cinesponsable.map').controller('MapCtrl', function($scope, $window, Theater, Position) {
   return Position.get().then(function(position) {
     angular.extend($scope, {
       defaults: {

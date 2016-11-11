@@ -1,7 +1,0 @@
-src: src/index.jade
-dest: www/
-
-cache: true
-
-pipeline:
-  jade:

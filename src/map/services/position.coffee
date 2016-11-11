@@ -9,8 +9,7 @@ angular.module 'Cinesponsable.map'
       console.warn err
       deferred.reject err
     ,
-      enableHighAccuracy: true
-      timeout: 5000
-      maximumAge: 0
+      timeout: 20000
+      maximumAge: 10000
     )
     deferred.promise
