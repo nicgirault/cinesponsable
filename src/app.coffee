@@ -7,7 +7,7 @@ angular.module 'Cinesponsable', [
   'ngMaterial'
   'ui.router'
   'app.templates'
-  'leaflet-directive'
+  'ui-leaflet'
 
   'Cinesponsable.common'
   'Cinesponsable.theater'

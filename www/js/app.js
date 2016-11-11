@@ -1,5 +1,5 @@
 'use strict';
-angular.module('Cinesponsable', ['ng', 'ngResource', 'ngAnimate', 'ngMaterial', 'ui.router', 'app.templates', 'leaflet-directive', 'Cinesponsable.common', 'Cinesponsable.theater', 'Cinesponsable.showtime', 'Cinesponsable.movie', 'Cinesponsable.map', 'Cinesponsable.search', 'Cinesponsable.constants']).config(function($mdGestureProvider) {
+angular.module('Cinesponsable', ['ng', 'ngResource', 'ngAnimate', 'ngMaterial', 'ui.router', 'app.templates', 'ui-leaflet', 'Cinesponsable.common', 'Cinesponsable.theater', 'Cinesponsable.showtime', 'Cinesponsable.movie', 'Cinesponsable.map', 'Cinesponsable.search', 'Cinesponsable.constants']).config(function($mdGestureProvider) {
   return $mdGestureProvider.skipClickHijack();
 }).config(function($mdIconProvider) {
   return $mdIconProvider.defaultIconSet('icons/mdi.light.svg');
@@ -23,7 +23,7 @@ angular.module('Cinesponsable', ['ng', 'ngResource', 'ngAnimate', 'ngMaterial', 
 
 angular.module("Cinesponsable.constants", [])
 
-.constant("API_URL", "//api.indecine.fr")
+.constant("API_URL", "https://api.indecine.fr")
 
 ;
 angular.module('Cinesponsable.common', []);
@@ -85,21 +85,6 @@ angular.module('Cinesponsable.map').config(function($stateProvider) {
     controller: 'MapCtrl',
     data: {
       tab: 'map'
-    },
-    resolve: {
-      currentPosition: function(position) {
-        return position.get().then(function(position) {
-          return {
-            latitude: position.coords.latitude,
-            longitude: position.coords.longitude
-          };
-        })["catch"](function(err) {
-          return {
-            latitude: 48.860779,
-            longitude: 2.340175
-          };
-        });
-      }
     }
   });
 });
@@ -281,35 +266,40 @@ angular.module('Cinesponsable.map').directive('mapPopup', function() {
   };
 });
 
-angular.module('Cinesponsable.map').controller('MapCtrl', function($scope, Theater, currentPosition) {
-  angular.extend($scope, {
-    userPosition: {
-      lat: currentPosition.latitude,
-      lng: currentPosition.longitude,
-      zoom: 13
-    },
-    data: {
-      markers: {}
-    }
-  });
-  return Theater.query().$promise.then(function(theaters) {
-    var markers, theater, _i, _len;
-    markers = {};
-    for (_i = 0, _len = theaters.length; _i < _len; _i++) {
-      theater = theaters[_i];
-      markers[theater.code] = {
-        lat: theater.geopoint.lat,
-        lng: theater.geopoint.lng,
-        compileMessage: true,
-        message: "<map-popup title='" + theater.name + "' subtitle='" + theater.address + " " + theater.postalCode + " " + theater.city + "' id='" + theater.id + "'>"
-      };
-    }
-    $scope.theaters = theaters;
-    $scope.data.markers = {};
-    angular.extend($scope.data, {
-      markers: markers
+angular.module('Cinesponsable.map').controller('MapCtrl', function($scope, Theater, Position) {
+  return Position.get().then(function(position) {
+    angular.extend($scope, {
+      defaults: {
+        tileLayer: 'https://api.mapbox.com/styles/v1/nicolasg6/civd0vm9z00d22imgufcyru6k/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1Ijoibmljb2xhc2c2IiwiYSI6ImNpdmQwbjl1dTAxZWwydHBka2dxODdsNmwifQ.Bo62UFRBwjEXlJNp_g2KVg'
+      },
+      userPosition: {
+        lat: position.lat,
+        lng: position.lng,
+        zoom: 13
+      },
+      data: {
+        markers: {}
+      }
     });
-    $scope.ready = true;
+    return Theater.query().$promise.then(function(theaters) {
+      var markers, theater, _i, _len;
+      markers = {};
+      for (_i = 0, _len = theaters.length; _i < _len; _i++) {
+        theater = theaters[_i];
+        markers[theater.code] = {
+          lat: theater.geopoint.lat,
+          lng: theater.geopoint.lng,
+          compileMessage: true,
+          message: "<map-popup title='" + theater.name + "' subtitle='" + theater.address + " " + theater.postalCode + " " + theater.city + "' id='" + theater.id + "'>"
+        };
+      }
+      $scope.theaters = theaters;
+      $scope.data.markers = {};
+      angular.extend($scope.data, {
+        markers: markers
+      });
+      $scope.ready = true;
+    });
   });
 });
 
