@@ -12,6 +12,7 @@
     "postinstall": "bower install --allow-root --config.interactive=false && gulp build",
     "watch": "API_URL=https://api.indecine.fr gulp watch",
     "start": "API_URL=https://api.indecine.fr gulp watch",
+    "start-local": "API_URL=http://localhost:8000 gulp watch",
     "build-web": "API_URL=https://api.indecine.fr gulp build",
     "build-mobile": "API_URL=https://api.indecine.fr PLATEFORM=mobile gulp build",
     "test": "NODE_ENV=test karma start"

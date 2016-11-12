@@ -15,6 +15,7 @@ gulp.task 'vendor', (done) ->
     'bower_components/angular-simple-logger/dist/angular-simple-logger.min.js'
     'bower_components/ui-leaflet/dist/ui-leaflet.min.js'
     'bower_components/moment/min/moment.min.js'
+    'bower_components/ngInfiniteScroll/build/ng-infinite-scroll.js'
   ]
   .pipe(concat('vendor.js'))
   .on 'error', gutil.log

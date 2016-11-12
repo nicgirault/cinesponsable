@@ -4,7 +4,12 @@ div(
 )
   md-progress-circular(md-mode="indeterminate")
 
-md-list(ng-if="ready")
+md-list(
+  ng-if="ready"
+  infinite-scroll="loadMore()"
+  infinite-scroll-parent
+  infinite-scroll-distance="1"
+)
   md-list-item.md-2-line(
     ng-repeat="theater in theaters"
   )

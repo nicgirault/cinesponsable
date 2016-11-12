@@ -8,6 +8,7 @@ angular.module 'Cinesponsable', [
   'ui.router'
   'app.templates'
   'ui-leaflet'
+  'infinite-scroll'
 
   'Cinesponsable.common'
   'Cinesponsable.theater'
