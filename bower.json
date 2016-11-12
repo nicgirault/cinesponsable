@@ -29,7 +29,8 @@
     "leaflet": "0.7.7",
     "angular-openlayers-directive": "^1.8.2",
     "lodash": "~4.16.6",
-    "ui-leaflet": "~2.0.0"
+    "ui-leaflet": "~2.0.0",
+    "angular-local-storage": "~0.5.2"
   },
   "resolutions": {
     "angular": "1.5.8",

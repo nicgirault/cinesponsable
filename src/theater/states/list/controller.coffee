@@ -1,5 +1,5 @@
 angular.module 'Cinesponsable.theater'
-.controller 'TheaterListCtrl', ($scope, $state, TheaterRepository, Position) ->
+.controller 'TheaterListCtrl', ($scope, $state, TheaterRepository, Position, Favorites) ->
   $scope.ready = false
   $scope.theaters = []
 
@@ -26,3 +26,9 @@ angular.module 'Cinesponsable.theater'
 
   $scope.showtime = (theater) ->
     $state.go 'base.showtimeByTheater', {theaterId: theater.id}
+
+  $scope.addToFavorites = (theaterId) ->
+    Favorites.toggle(theaterId)
+    $scope.favorites = Favorites.get()
+
+  $scope.favorites = Favorites.get()

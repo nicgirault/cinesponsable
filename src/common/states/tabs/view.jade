@@ -1,13 +1,13 @@
 md-tabs.md-primary(md-stretch-tabs="always")
-  md-tab(ui-sref="base.tabs.theaters" md-active="state.current.data.tab == 'theaters'") Salles
+  md-tab(ui-sref="base.tabs.{{ state.current.data.subtab || 'theaters' }}" md-active="state.current.data.tab == 'theaters'") Salles
   md-tab(ui-sref="base.movieList" md-active="state.current.data.tab == 'movies'") Films
 
 md-content(ui-view layout="column" flex="grow" style="height: 100%")
 
 md-tabs(md-stretch-tabs="always" md-no-ink-bar="true")
-  md-tab(ui-sref="base.tabs.map" md-active="state.current.data.tab == 'map'")
+  md-tab(ui-sref="base.tabs.map" md-active="state.current.data.subtab == 'map'")
     md-icon(md-svg-icon='map-marker-circle')
-  md-tab(ui-sref="base.tabs.theaters" md-active="state.current.data.tab == 'theaters'")
+  md-tab(ui-sref="base.tabs.theaters" md-active="state.current.data.subtab == 'search'")
     md-icon(md-svg-icon='magnify')
-  md-tab(ui-sref="base.favorites" md-active="state.current.data.tab == 'movies'" ng-disabled="true")
+  md-tab(ui-sref="base.tabs.favorites" md-active="state.current.data.subtab == 'favorites'")
     md-icon(md-svg-icon='heart')

@@ -1,5 +1,3 @@
-'use strict'
-
 angular.module 'Cinesponsable', [
   'ng'
   'ngResource'
@@ -9,6 +7,7 @@ angular.module 'Cinesponsable', [
   'app.templates'
   'ui-leaflet'
   'infinite-scroll'
+  'LocalStorageModule'
 
   'Cinesponsable.common'
   'Cinesponsable.theater'

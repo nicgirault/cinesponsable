@@ -8,4 +8,5 @@ angular.module 'Cinesponsable.map'
     templateUrl: 'map/states/main/view.html'
     controller: 'MapCtrl'
     data:
-      tab: 'map'
+      tab: 'theaters'
+      subtab: 'map'
