@@ -12,8 +12,9 @@ div(
   md-progress-circular(md-mode="indeterminate")
 
 md-content(layout="row" layout-wrap ng-if="ready")
-  div.md-padding
-    span.md-subhead {{ movie.synopsis | htmlToPlaintext }}
+  .md-padding
+    .md-headline Synopsis
+    .md-subhead {{ movie.synopsis | htmlToPlaintext }}
   div(
     flex-gt-lg="20" flex-lg="25" flex-md="33" flex-sm="50" flex-xs="100"
     ng-repeat="theater in theaters"
