@@ -10,23 +10,32 @@ div(layout="row" layout-wrap ng-if="ready")
     span.md-subhead {{ movie.synopsis | htmlToPlaintext }}
   div(
     flex-gt-lg="20" flex-lg="25" flex-md="33" flex-sm="50" flex-xs="100"
-    ng-repeat="(theaterId, showtimesByTheater) in groupedShowtimes"
+    ng-repeat="theater in theaters"
     layout="column"
   )
     md-card(flex="grow" layout="column" layout-align="start")
       md-card-title(flex="initial" layout="row")
         md-card-title-text(flex)
-          span.md-headline {{ theaters[theaterId].theater.name }}
-          span.md-subhead {{ theaters[theaterId].theater.address }} {{ theaters[theaterId].theater.postalCode }} {{ theaters[theaterId].theater.city }}
+          span.md-headline {{ theater.name }}
+          span.md-subhead {{ theater.address }} {{ theater.postalCode }} {{ theater.city }} ({{ theater.actualDistance.toFixed(0) }} kms)
         div(flex)
-        a.md-icon-button(target="_blank" href="//maps.google.com/?q={{ theaters[theaterId].theater.geopoint.lat }},{{ theaters[theaterId].theater.geopoint.lng }}")
+        a.md-icon-button(
+          target="_blank"
+          ng-if="PLATEFORM === 'DESKTOP'"
+          href="//maps.google.com/?q={{ theater.geopoint.lat }},{{ theater.geopoint.lng }}"
+        )
+          md-icon(md-svg-icon='google-maps')
+        a.md-icon-button(
+          ng-if="PLATEFORM === 'MOBILE'"
+          href="geo:{{ theater.geopoint.lat }},{{ theater.geopoint.lng }}?q={{ theater.name }}+{{ theater.address }}+{{ theater.postalCode }}+{{ theater.city }}"
+        )
           md-icon(md-svg-icon='google-maps')
       md-card-content
-        div(ng-repeat="(language, showtimesByLanguage) in groupedShowtimes[theaterId]")
+        div(ng-repeat="(language, showtimesByLanguage) in groupedShowtimes[theater.id]")
           h3 {{ language }}
-          span(ng-repeat="(day, showtimesByDay) in groupedShowtimes[theaterId][language]")
+          span(ng-repeat="(day, showtimesByDay) in groupedShowtimes[theater.id][language]")
             | {{ showtimesByDay[0].day }}: 
-            span(ng-repeat="showtimes in groupedShowtimes[theaterId][language][day]")
+            span(ng-repeat="showtimes in groupedShowtimes[theater.id][language][day]")
               | {{ showtimes.datetime | date : "H'h'mm" }}
               span(ng-if="!$last") , 
             hr(ng-if="!$last")

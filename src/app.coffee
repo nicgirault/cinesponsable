@@ -32,6 +32,9 @@ angular.module 'Cinesponsable', [
   $locationProvider.hashPrefix '!'
   $urlRouterProvider.otherwise '/map'
 
+.config ($compileProvider) ->
+  $compileProvider.aHrefSanitizationWhitelist(/^\s*(https?|ftp|mailto|geo):/);
+
 .run ->
   # http://stackoverflow.com/questions/10022156/underscore-js-groupby-multiple-values
   _.groupByMulti = (obj, values, context) ->

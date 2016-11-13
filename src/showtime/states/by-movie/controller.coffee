@@ -9,7 +9,6 @@ angular.module 'Cinesponsable.showtime'
   Position
 ) ->
   $scope.ready = false
-
   Position.get().then (position) ->
     $q.all [
       Showtime.query
@@ -25,7 +24,7 @@ angular.module 'Cinesponsable.showtime'
                 lt: moment().add(7, 'days').toDate()
             ]
             order: 'datetime ASC'
-            position: "#{position.lat};#{position.lng}"
+        position: "#{position.lat};#{position.lng}"
       .$promise
     ,
       Movie.get(movieId: $stateParams.movieId).$promise
@@ -34,10 +33,12 @@ angular.module 'Cinesponsable.showtime'
     for showtime in showtimes
       showtime.day = moment(showtime.datetime)
         .format('dddd D MMMM')
-    $scope.theaters = _.keyBy showtimes, 'theaterId'
+
+    $scope.theaters = _(showtimes).map('theater').uniqBy('id').sortBy('actualDistance').value()
     $scope.movie = movie
     groupByDay = (showtime) ->
       moment(showtime.datetime).format('DD-MM-YY')
+
     $scope.groupedShowtimes = _.groupByMulti showtimes, ['theaterId', 'language', groupByDay]
     $scope.ready = true
 

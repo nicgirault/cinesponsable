@@ -4,8 +4,8 @@ jade = require 'gulp-jade'
 rename = require 'gulp-rename'
 
 gulp.task 'jade-index', (done) ->
-  if process.env.PLATEFORM?
-    src = "src/index#{process.env.PLATEFORM}.jade"
+  if process.env.PLATEFORM?.toLowerCase() is 'mobile'
+    src = "src/indexmobile.jade"
   else
     src = 'src/index.jade'
   gulp.src([src])
