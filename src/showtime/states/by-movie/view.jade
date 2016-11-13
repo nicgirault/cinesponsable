@@ -5,6 +5,12 @@ md-toolbar
     h2
       span {{ movie.originalTitle }}
 
+div(
+  flex="grow" layout="row" layout-align="space-around center"
+  ng-if="!ready"
+)
+  md-progress-circular(md-mode="indeterminate")
+
 md-content(layout="row" layout-wrap ng-if="ready")
   div.md-padding
     span.md-subhead {{ movie.synopsis | htmlToPlaintext }}
