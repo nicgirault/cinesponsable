@@ -2,6 +2,7 @@ angular.module 'Cinesponsable.movie'
 .controller 'MovielistCtrl', (
   $scope
   $timeout
+  $state
   MovieRepository
   position
 ) ->
@@ -28,3 +29,6 @@ angular.module 'Cinesponsable.movie'
       return allIsLoaded = true if movies.length is 0
       page++
       $scope.movies = $scope.movies.concat movies
+
+  $scope.goToMovieDetails = (movieId) ->
+    $state.go 'base.showtimeByMovie', {movieId: movieId}
