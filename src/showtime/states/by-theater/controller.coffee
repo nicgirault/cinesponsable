@@ -2,11 +2,14 @@ angular.module 'Cinesponsable.showtime'
 .controller 'ShowtimeCtrl', (
   $scope
   $stateParams
+  $q
+  $window
   Showtime
   Movie
+  Theater
 ) ->
   $scope.ready = false
-  Showtime.query
+  moviesPromise = Showtime.query
     filter:
       where:
         and: [
@@ -19,6 +22,8 @@ angular.module 'Cinesponsable.showtime'
         theaterId: $stateParams.theaterId
       order: 'datetime ASC'
   .$promise.then (showtimes) ->
+    if showtimes.length is 0
+      $scope.noShowtime = true
     movieIds = (showtime.movieId for showtime in showtimes)
     for showtime in showtimes
       showtime.day = moment(showtime.datetime)
@@ -36,4 +41,14 @@ angular.module 'Cinesponsable.showtime'
     .$promise
   .then (movies) ->
     $scope.movies = movies
+
+  theaterPromise = Theater.get(theaterId: $stateParams.theaterId).$promise
+  .then (theater) ->
+    $scope.theater = theater
+
+  $q.all [moviesPromise, theaterPromise]
+  .then ->
     $scope.ready = true
+
+  $scope.back = ->
+    $window.history.back()

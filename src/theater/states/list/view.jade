@@ -12,14 +12,15 @@ md-list(
 )
   md-list-item.md-2-line(
     ng-repeat="theater in theaters"
+    ng-click="showtime(theater)"
   )
-    md-button.md-no-style.md-ink-ripple(ng-click="showtime(theater)" aria-label="theater")
-      .md-list-item-text
-        h3 {{ theater.name }}
-        p {{ theater.address }}, {{ theater.postalCode }} {{ theater.city }}
-        md-icon.md-secondary(
-          aria-label="favorites"
-          md-svg-icon="star"
-          ng-class="{'active': favorites[theater.id]}"
-          ng-click="addToFavorites(theater.id)"
-        )
+    .md-list-item-text
+      h3 {{ theater.name }}
+      p {{ theater.address }}, {{ theater.postalCode }} {{ theater.city }}
+      md-icon.md-secondary(
+        aria-label="favorites"
+        md-svg-icon="star"
+        ng-class="{'active': favorites[theater.id]}"
+        ng-click="addToFavorites(theater.id)"
+      )
+    md-divider(ng-if="!$last")

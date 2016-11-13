@@ -35,6 +35,15 @@ angular.module 'Cinesponsable', [
 .config ($compileProvider) ->
   $compileProvider.aHrefSanitizationWhitelist(/^\s*(https?|ftp|mailto|geo):/);
 
+.config ($mdThemingProvider) ->
+  $mdThemingProvider.theme('default')
+    .primaryPalette('red')
+    .accentPalette('blue-grey')
+    .backgroundPalette('grey',
+      'default': '200'
+      'hue-1': '50'
+    )
+
 .run ->
   # http://stackoverflow.com/questions/10022156/underscore-js-groupby-multiple-values
   _.groupByMulti = (obj, values, context) ->

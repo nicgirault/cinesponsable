@@ -40,10 +40,10 @@ md-content
   )
     md-list-item.md-3-line(
       ng-repeat="movie in movies"
+      ng-click="goToMovieDetails(movie.id)"
     )
-      md-button.md-no-style.md-ink-ripple(ng-click="goToMovieDetails(movie.id)" aria-label="movie")
-        .md-list-item-text
-          h3(style="font-weight: bold;") {{ movie.originalTitle }}
-          h4(style="white-space: normal;") de {{ movie.director }}
-          p Sortie le {{ movie.releaseDate }}
-        md-divider(ng-if="!last")
+      .md-list-item-text
+        h3.md-title(md-colors="{color:'primary-800'}") {{ movie.originalTitle }}
+        h4(style="white-space: normal;") de {{ movie.director }}
+        p Sortie le {{ movie.releaseDate }}
+      md-divider(ng-if="!last")
