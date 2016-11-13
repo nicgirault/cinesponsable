@@ -4,6 +4,13 @@ div(
 )
   md-progress-circular(md-mode="indeterminate")
 
+div.md-padding.info(
+  ng-if="ready && theaters.length === 0"
+  flex
+  layout="column" layout-align="center center"
+)
+  h3.md-headline Vous n'avez pas encore de cinémas favoris.
+  p.md-caption Ajoutez vos cinémas favoris pour voir rapidement les films et séances de ces cinémas.
 md-list(
   ng-if="ready"
 )
