@@ -5,7 +5,7 @@ md-toolbar
     h2
       span {{ movie.originalTitle }}
 
-div(layout="row" layout-wrap ng-if="ready")
+md-content(layout="row" layout-wrap ng-if="ready")
   div.md-padding
     span.md-subhead {{ movie.synopsis | htmlToPlaintext }}
   div(
