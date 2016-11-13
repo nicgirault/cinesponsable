@@ -8,27 +8,45 @@ md-content
     ng-if="!ready"
   )
     md-progress-circular(md-mode="indeterminate")
+  //- div(
+  //-   infinite-scroll="loadMore()"
+  //-   infinite-scroll-parent
+  //-   infinite-scroll-distance="1"
+  //- )
+  //-   md-grid-list(
+  //-     md-cols-xs='2'
+  //-     md-cols-sm='3'
+  //-     md-cols-md='4'
+  //-     md-cols-gt-md='6'
+  //-     md-row-height-gt-md='3:4'
+  //-     md-row-height='3:4'
+  //-     md-gutter='12px'
+  //-     md-gutter-sm='5px'
+  //-     md-gutter-xs='2px'
+  //-   )
+  //-     md-grid-tile(
+  //-       ng-repeat="movie in movies"
+  //-       ui-sref="base.showtimeByMovie({movieId: movie.id})"
+  //-       style="cursor: pointer;"
+  //-     )
+  //-       img(src="{{ movie.poster }}" width="100%" height="100%")
+  //-       md-grid-tile-footer
+  //-         h3 {{ movie.originalTitle }}
+          
   div(
     infinite-scroll="loadMore()"
     infinite-scroll-parent
     infinite-scroll-distance="1"
   )
-    md-grid-list(
-      md-cols-xs='2'
-      md-cols-sm='3'
-      md-cols-md='4'
-      md-cols-gt-md='6'
-      md-row-height-gt-md='3:4'
-      md-row-height='3:4'
-      md-gutter='12px'
-      md-gutter-sm='5px'
-      md-gutter-xs='2px'
-    )
-      md-grid-tile(
+    md-list
+      md-list-item.md-3-line(
         ng-repeat="movie in movies"
         ui-sref="base.showtimeByMovie({movieId: movie.id})"
-        style="cursor: pointer;"
       )
-        img(src="{{ movie.poster }}" width="100%" height="100%")
-        md-grid-tile-footer
-          h3 {{ movie.originalTitle }}
+        .md-list-item-text
+          h3
+            b {{ movie.originalTitle }}
+            |  de {{ movie.director }}
+          h4 Sortie le {{ movie.releaseDate }}
+          p {{ movie.synopsis | htmlToPlaintext }}
+        md-divider(ng-if="!last")

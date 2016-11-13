@@ -11,6 +11,7 @@ angular.module 'Cinesponsable.theater'
       .$promise
       .then (movies) ->
         for movie in movies
+          movie.releaseDate = moment(movie.releaseDate).format('D MMMM YYYY')
           if movie.poster?
             url = movie.poster.split('/')
             url.splice(3, 0, 'cx_240_320')
