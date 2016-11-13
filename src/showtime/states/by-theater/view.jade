@@ -19,7 +19,7 @@ div(layout="row" layout-wrap ng-if="ready")
     layout="column"
   )
     md-card(flex="grow" layout="column" layout-align="start")
-      img.md-card-image(ng-src='{{ movie.poster }}', alt='movie poster' )
+      //- img.md-card-image(ng-src='{{ movie.poster }}', alt='movie poster' )
       md-card-title(flex="initial" ui-sref="base.movieDetails({ movieId: movie.id })")
         md-card-title-text
           span.md-headline {{ movie.originalTitle }}
