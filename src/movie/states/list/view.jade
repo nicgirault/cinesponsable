@@ -2,38 +2,20 @@ md-tabs.md-primary(md-stretch-tabs="always")
   md-tab(ui-sref="base.tabs.theaters" md-active="state.current.data.tab == 'theaters'") Salles
   md-tab(ui-sref="base.movieList" md-active="state.current.data.tab == 'movies'") Films
 
+.search-container.md-whiteframe-z1
+  .algolia
+    img(src="images/Algolia_logo_bg-white.jpg")
+  input(ng-model='search.query' placeholder="Chercher un film")
+
+div(
+  flex="grow" layout="row" layout-align="space-around center"
+  ng-if="!ready"
+)
+  md-progress-circular(md-mode="indeterminate")
+
 md-content
-  div(
-    flex="grow" layout="row" layout-align="space-around center"
-    ng-if="!ready"
-  )
-    md-progress-circular(md-mode="indeterminate")
-  //- div(
-  //-   infinite-scroll="loadMore()"
-  //-   infinite-scroll-parent
-  //-   infinite-scroll-distance="1"
-  //- )
-  //-   md-grid-list(
-  //-     md-cols-xs='2'
-  //-     md-cols-sm='3'
-  //-     md-cols-md='4'
-  //-     md-cols-gt-md='6'
-  //-     md-row-height-gt-md='3:4'
-  //-     md-row-height='3:4'
-  //-     md-gutter='12px'
-  //-     md-gutter-sm='5px'
-  //-     md-gutter-xs='2px'
-  //-   )
-  //-     md-grid-tile(
-  //-       ng-repeat="movie in movies"
-  //-       ui-sref="base.showtimeByMovie({movieId: movie.id})"
-  //-       style="cursor: pointer;"
-  //-     )
-  //-       img(src="{{ movie.poster }}" width="100%" height="100%")
-  //-       md-grid-tile-footer
-  //-         h3 {{ movie.originalTitle }}
-          
   md-list(
+    ng-if="search.movies.length === 0"
     infinite-scroll="loadMore()"
     infinite-scroll-parent
     infinite-scroll-distance="1"
@@ -43,7 +25,21 @@ md-content
       ng-click="goToMovieDetails(movie.id)"
     )
       .md-list-item-text
-        h3.md-title(md-colors="{color:'primary-800'}") {{ movie.originalTitle }}
+        h3.md-title(md-colors="{color:'accent-800'}") {{ movie.originalTitle }}
         h4(style="white-space: normal;") de {{ movie.director }}
+        p Sortie le {{ movie.releaseDate }}
+      md-divider(ng-if="!last")
+  
+  md-list(
+    ng-if="search.movies.length > 0"
+  )
+    md-list-item.md-3-line(
+      ng-repeat="movie in search.movies"
+      ng-click="goToMovieDetails(movie.id)"
+    )
+      .md-list-item-text
+        h3.md-title(md-colors="{color:'accent-800'}" ng-bind-html="movie._highlightResult.originalTitle.value")
+        h4(style="white-space: normal;") de &nbsp;
+          span(ng-bind-html="movie._highlightResult.director.value")
         p Sortie le {{ movie.releaseDate }}
       md-divider(ng-if="!last")

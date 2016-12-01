@@ -5,6 +5,7 @@ angular.module 'Cinesponsable.movie'
   $state
   MovieRepository
   position
+  SearchClient
 ) ->
   $scope.ready = false
   $scope.movies = []
@@ -32,3 +33,19 @@ angular.module 'Cinesponsable.movie'
 
   $scope.goToMovieDetails = (movieId) ->
     $state.go 'base.showtimeByMovie', {movieId: movieId}
+
+  $scope.search =
+    query: ''
+    movies: []
+
+  $scope.$watch 'search.query', ->
+    if $scope.search.query is ''
+      $scope.search.movies = []
+      return
+
+    SearchClient.movieIndex.search($scope.search.query)
+    .then (content) ->
+      for movie in content.hits
+        movie.releaseDate = moment(movie.releaseDate).format('D MMMM YYYY')
+      $scope.search.movies = content.hits
+    .catch console.error
