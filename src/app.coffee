@@ -32,7 +32,7 @@ angular.module 'Cinesponsable', [
   $urlRouterProvider
 ) ->
   $locationProvider.hashPrefix '!'
-  $urlRouterProvider.otherwise '/map'
+  $urlRouterProvider.otherwise '/theaters'
 
 .config ($compileProvider) ->
   $compileProvider.aHrefSanitizationWhitelist(/^\s*(https?|ftp|mailto|geo):/);
