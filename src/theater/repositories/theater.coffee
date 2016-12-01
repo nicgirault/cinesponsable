@@ -1,10 +1,12 @@
 angular.module 'Cinesponsable.theater'
 .service 'TheaterRepository', (Theater, Favorites) ->
   pageCount = 20
+  cache = {}
 
   getByPosition: (position, page) ->
     page = 0 unless page?
-    Theater.query
+    return cache[page] if cache[page]?
+    cache[page] = Theater.query
       filter:
         where:
           geopoint:

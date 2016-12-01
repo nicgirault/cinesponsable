@@ -7,3 +7,34 @@
 .center {
   text-align: center;
 }
+em {
+  color: rgb(244,67,54);
+  font-weight: bold;
+  font-style: normal;
+}
+
+.search-container {
+  margin: 15px 10px 0 10px;
+  background-color: white;
+  padding: 10px;
+  position: relative;
+
+  input {
+    border: none;
+
+    &:focus {
+      outline: none;
+    }
+  }
+
+  .algolia {
+    position: absolute;
+    right: 8px;
+    top: 14px;
+    font-size: 15px;
+
+    img {
+      height: 15px;
+    }
+  }
+}

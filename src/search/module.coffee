@@ -1,1 +1,1 @@
-angular.module 'Cinesponsable.search', []
+angular.module 'Cinesponsable.search', ['algoliasearch']

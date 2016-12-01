@@ -30,7 +30,8 @@
     "lodash": "~4.16.6",
     "ui-leaflet": "~2.0.0",
     "angular-local-storage": "~0.5.2",
-    "angular-material": "~1.1.1"
+    "angular-material": "~1.1.1",
+    "algoliasearch": "~3.19.1"
   },
   "resolutions": {
     "angular": "1.5.8",

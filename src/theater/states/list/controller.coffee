@@ -1,5 +1,5 @@
 angular.module 'Cinesponsable.theater'
-.controller 'TheaterListCtrl', ($scope, $state, TheaterRepository, Position, Favorites) ->
+.controller 'TheaterListCtrl', ($scope, $state, TheaterRepository, Position, Favorites, SearchClient) ->
   $scope.ready = false
   $scope.theaters = []
 
@@ -32,3 +32,17 @@ angular.module 'Cinesponsable.theater'
     $scope.favorites = Favorites.get()
 
   $scope.favorites = Favorites.get()
+
+  $scope.search =
+    query: ''
+    theaters: []
+
+  $scope.$watch 'search.query', ->
+    if $scope.search.query is ''
+      $scope.search.theaters = []
+      return
+
+    SearchClient.theaterIndex.search($scope.search.query)
+    .then (content) ->
+      $scope.search.theaters = content.hits
+    .catch console.error
