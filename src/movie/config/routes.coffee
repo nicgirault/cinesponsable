@@ -4,9 +4,10 @@ angular.module 'Cinesponsable.movie'
 ) ->
   $stateProvider
   .state 'base.movieList',
-    url: '/movie'
+    url: '/movie?q'
     templateUrl: 'movie/states/list/view.html'
     controller: 'MovielistCtrl'
+    reloadOnSearch: false
     data:
       tab: 'movies'
 

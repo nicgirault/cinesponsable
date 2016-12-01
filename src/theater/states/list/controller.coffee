@@ -1,5 +1,15 @@
 angular.module 'Cinesponsable.theater'
-.controller 'TheaterListCtrl', ($scope, $state, TheaterRepository, Position, Favorites, SearchClient) ->
+.controller 'TheaterListCtrl', (
+  $scope
+  $state
+  $window
+  $timeout
+  $location
+  TheaterRepository
+  Position
+  Favorites
+  SearchClient
+) ->
   $scope.ready = false
   $scope.theaters = []
 
@@ -33,11 +43,18 @@ angular.module 'Cinesponsable.theater'
 
   $scope.favorites = Favorites.get()
 
+  $timeout ->
+    $window.document.getElementById('search').focus()
   $scope.search =
     query: ''
     theaters: []
 
+  changeUrl = null
   $scope.$watch 'search.query', ->
+    $timeout.cancel(changeUrl)
+    changeUrl = $timeout ->
+      $location.search('q', $scope.search.query)
+    , 500
     if $scope.search.query is ''
       $scope.search.theaters = []
       return

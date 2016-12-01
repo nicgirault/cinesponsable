@@ -3,6 +3,9 @@ angular.module 'Cinesponsable.movie'
   $scope
   $timeout
   $state
+  $stateParams
+  $location
+  $window
   MovieRepository
   position
   SearchClient
@@ -35,10 +38,18 @@ angular.module 'Cinesponsable.movie'
     $state.go 'base.showtimeByMovie', {movieId: movieId}
 
   $scope.search =
-    query: ''
+    query: $stateParams.q or ''
     movies: []
 
+  $timeout ->
+    $window.document.getElementById('search').focus()
+
+  changeUrl = null
   $scope.$watch 'search.query', ->
+    $timeout.cancel(changeUrl)
+    changeUrl = $timeout ->
+      $location.search('q', $scope.search.query)
+    , 500
     if $scope.search.query is ''
       $scope.search.movies = []
       return

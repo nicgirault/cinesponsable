@@ -5,7 +5,7 @@ md-tabs.md-primary(md-stretch-tabs="always")
 .search-container.md-whiteframe-z1
   .algolia
     img(src="images/Algolia_logo_bg-white.jpg")
-  input(ng-model='search.query' placeholder="Chercher un film")
+  input#search(ng-model='search.query' placeholder="Chercher un film" autofocus)
 
 div(
   flex="grow" layout="row" layout-align="space-around center"

@@ -3,9 +3,10 @@ angular.module 'Cinesponsable.theater'
   $stateProvider
 
   .state 'base.tabs.theaters',
-    url: '/theaters'
+    url: '/theaters?q'
     templateUrl: 'theater/states/list/view.html'
     controller: 'TheaterListCtrl'
+    reloadOnSearch: false
     data:
       tab: 'theaters'
       subtab: 'theaters'
