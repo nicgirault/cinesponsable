@@ -4,6 +4,15 @@ md-toolbar
       md-icon(md-svg-icon='arrow-left')
     h2
       span {{ theater.name }}
+    
+    //- md-menu(md-position-mode="target-right target")
+    //-   md-button.md-icon-button(aria-label='open menu', ng-click='openMenu($mdOpenMenu, $event)')
+    //-     md-icon(md-menu-origin md-svg-icon='dots-vertical')
+    //-   md-menu-content(width='3')
+    //-     md-menu-item
+    //-       md-button(ng-click='setByMovie()') Par film
+    //-     md-menu-item
+    //-       md-button(ng-click='setByDate()') Par date
       
 div(
   flex="grow" layout="row" layout-align="space-around center"
@@ -34,7 +43,7 @@ div(
 )
   div.text-center Ce cinéma n'enregistre pas encore ses séances...
 
-div(layout="row" layout-wrap ng-if="ready")
+div(layout="row" layout-wrap ng-if="ready && byMovie")
   div(
     flex-gt-lg="20" flex-lg="25" flex-md="33" flex-sm="50" flex-xs="100"
     ng-repeat="movie in movies"
@@ -55,3 +64,17 @@ div(layout="row" layout-wrap ng-if="ready")
               | {{ showtimes.datetime | date : "H'h'mm" }}
               span(ng-if="!$last") , 
             hr(ng-if="!$last")
+  
+  div(layout="row" layout-wrap ng-if="ready && byDate")
+    div(
+      flex-gt-lg="20" flex-lg="25" flex-md="33" flex-sm="50" flex-xs="100"
+      ng-repeat="day in days"
+      layout="column"
+    )
+      md-card(flex="grow" layout="column" layout-align="start")
+        //- img.md-card-image(ng-src='{{ movie.poster }}', alt='movie poster' )
+        md-card-title(flex="initial")
+          md-card-title-text
+            span.md-headline {{day.date }}
+            span.md-subhead
+        md-card-content

@@ -8,6 +8,20 @@ angular.module 'Cinesponsable.showtime'
   Movie
   Theater
 ) ->
+  $scope.openMenu = ($mdOpenMenu, ev) ->
+    $mdOpenMenu(ev)
+
+  $scope.setByDate = ->
+    $scope.byDate = true
+    $scope.byMovie = false
+    return
+
+  $scope.setByMovie = ->
+    $scope.byDate = false
+    $scope.byMovie = true
+    return
+
+  $scope.byMovie = true
   $scope.ready = false
   moviesPromise = Showtime.query
     filter:
