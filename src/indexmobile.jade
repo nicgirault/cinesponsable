@@ -10,6 +10,7 @@ html(lang="en")
     script.
       document.addEventListener("deviceready", function() {
         angular.bootstrap(document.documentElement, ["Cinesponsable"]);
+        navigator.splashscreen.hide()
       }, false);
   body
     md-content(ui-view layout="column" style="height: 100%")
