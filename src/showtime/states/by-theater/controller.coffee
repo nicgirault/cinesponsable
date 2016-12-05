@@ -4,7 +4,7 @@ angular.module 'Cinesponsable.showtime'
   $stateParams
   $q
   $window
-  Showtime
+  ShowtimeRepository
   Movie
   Theater
 ) ->
@@ -14,7 +14,17 @@ angular.module 'Cinesponsable.showtime'
   $scope.setByDate = ->
     $scope.byDate = true
     $scope.byMovie = false
-    return
+
+    ShowtimeRepository.getByDate($stateParams.theaterId)
+    .then (byDateShowtimes) ->
+      $scope.ready = true
+      $scope.byDateShowtimes = byDateShowtimes
+
+  $scope.dateTitle = (yyyymmdd) ->
+    moment(yyyymmdd, 'DD-MM-YY').format('dddd')
+
+  $scope.dateSubtitle = (yyyymmdd) ->
+    moment(yyyymmdd, 'DD-MM-YY').format('D MMMM')
 
   $scope.setByMovie = ->
     $scope.byDate = false
@@ -23,38 +33,19 @@ angular.module 'Cinesponsable.showtime'
 
   $scope.byMovie = true
   $scope.ready = false
-  moviesPromise = Showtime.query
-    filter:
-      where:
-        and: [
-          datetime:
-            gt: new Date()
-        ,
-          datetime:
-            lt: moment().add(7, 'days').toDate()
-        ]
-        theaterId: $stateParams.theaterId
-      order: 'datetime ASC'
-  .$promise.then (showtimes) ->
-    if showtimes.length is 0
-      $scope.noShowtime = true
-    movieIds = (showtime.movieId for showtime in showtimes)
-    for showtime in showtimes
-      showtime.day = moment(showtime.datetime)
-        .format('dddd D MMMM')
-
-    groupByDay = (showtime) ->
-      moment(showtime.datetime).format('DD-MM-YY')
-    groupedShowtimes = _.groupByMulti showtimes, ['movieId', 'language', groupByDay]
+  moviesPromise = ShowtimeRepository.getByMovie($stateParams.theaterId)
+  .then (groupedShowtimes) ->
     $scope.groupedShowtimes = groupedShowtimes
     Movie.query
       filter:
         where:
           id:
-            inq: _.uniq movieIds
+            inq: _.keys(groupedShowtimes)
     .$promise
   .then (movies) ->
     $scope.movies = movies
+    $scope.moviesById = _.keyBy movies, 'id'
+    console.log $scope.moviesById
 
   theaterPromise = Theater.get(theaterId: $stateParams.theaterId).$promise
   .then (theater) ->
@@ -64,5 +55,6 @@ angular.module 'Cinesponsable.showtime'
   .then ->
     $scope.ready = true
 
+  # TODO: move this in a directive
   $scope.back = ->
     $window.history.back()

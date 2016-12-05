@@ -4,6 +4,7 @@ angular.module 'Cinesponsable', [
   'ngAnimate'
   'ngSanitize'
   'ngMaterial'
+  'material.components.expansionPanels'
   'ui.router'
   'app.templates'
   'ui-leaflet'
