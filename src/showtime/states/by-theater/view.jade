@@ -65,8 +65,8 @@ div(layout="row" layout-wrap ng-if="ready && byMovie")
               span(ng-if="!$last") , 
             hr(ng-if="!$last")
 
-div(layout="column" layout-wrap ng-if="ready && byDate")
-  div(ng-repeat="(day, showtimesByDay) in byDateShowtimes")
+div(layout="column" ng-if="ready && byDate" flex="100")
+  div(ng-repeat="(day, showtimesByDay) in byDateShowtimes" flex="100")
     .md-subhead.md-padding {{ dateTitle(day) }} {{ dateSubtitle(day) }}
     md-expansion-panel-group
       md-expansion-panel(ng-repeat="(movieId, showtimesByMovie) in showtimesByDay")
