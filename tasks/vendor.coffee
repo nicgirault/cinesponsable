@@ -20,6 +20,8 @@ gulp.task 'vendor', (done) ->
     'bower_components/ngInfiniteScroll/build/ng-infinite-scroll.min.js'
     'bower_components/angular-local-storage/dist/angular-local-storage.min.js'
     'bower_components/algoliasearch/dist/algoliasearch.angular.min.js'
+    'bower_components/angulartics/dist/angulartics.min.js'
+    'bower_components/angulartics-google-analytics/dist/angulartics-ga.min.js'
   ]
   .pipe(concat('vendor.js'))
   .on 'error', gutil.log

@@ -10,8 +10,8 @@
   },
   "scripts": {
     "postinstall": "bower install --allow-root --config.interactive=false && gulp build",
-    "watch": "API_URL=https://api.indecine.fr gulp watch",
-    "start": "API_URL=https://api.indecine.fr gulp watch",
+    "watch": "NODE_ENV=dev API_URL=https://api.indecine.fr gulp watch",
+    "start": "NODE_ENV=dev API_URL=https://api.indecine.fr gulp watch",
     "start-local": "API_URL=http://localhost:8000 gulp watch",
     "build-web": "API_URL=https://api.indecine.fr PLATEFORM=DESKTOP gulp build",
     "build-mobile": "API_URL=https://api.indecine.fr PLATEFORM=MOBILE gulp build",
@@ -26,7 +26,7 @@
     "gulp-rename": "1.2.2",
     "jade": "1.3.x",
     "lodash": "2.4.x",
-    "phonegap": "^6.3.4",
+    "phonegap": "6.3.4",
     "run-sequence": "0.3.x"
   },
   "devDependencies": {
@@ -38,6 +38,7 @@
     "gulp-jade": "0.4.x",
     "gulp-less": "1.2.x",
     "gulp-plug": "0.2.4",
+    "gulp-replace": "0.5.4",
     "gulp-util": "2.2.x",
     "gulp-webserver": "0.3.4"
   },

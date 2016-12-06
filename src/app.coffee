@@ -11,6 +11,8 @@ angular.module 'Cinesponsable', [
   'infinite-scroll'
   'LocalStorageModule'
   'algoliasearch'
+  'angulartics'
+  'angulartics.google.analytics'
 
   'Cinesponsable.common'
   'Cinesponsable.theater'
