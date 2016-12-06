@@ -13,77 +13,77 @@ md-toolbar
           md-button(ng-click='setByMovie()') Par film
         md-menu-item
           md-button(ng-click='setByDate()') Par date
-      
+
 div(
-  flex="grow" layout="row" layout-align="space-around center"
-  ng-if="!ready"
+flex="grow" layout="row" layout-align="space-around center"
+ng-if="!ready"
 )
   md-progress-circular(md-mode="indeterminate")
+md-content
+  div(ng-if="ready")
+    .md-padding.center {{ theater.address }} {{ theater.postalCode }} {{ theater.city }}
+    .center
+      a.md-icon-button(
+        target="_blank"
+        ng-if="PLATEFORM === 'DESKTOP'"
+        href="//maps.google.com/?q={{ theater.geopoint.lat }},{{ theater.geopoint.lng }}"
+      )
+        md-icon(md-svg-icon='google-maps')
+      a.md-icon-button(
+        ng-if="PLATEFORM === 'MOBILE'"
+        href="geo:{{ theater.geopoint.lat }},{{ theater.geopoint.lng }}?q={{ theater.name }}+{{ theater.address }}+{{ theater.postalCode }}+{{ theater.city }}"
+      )
+        md-icon(md-svg-icon='google-maps')
 
-div(ng-if="ready")
-  .md-padding.center {{ theater.address }} {{ theater.postalCode }} {{ theater.city }}
-  .center
-    a.md-icon-button(
-      target="_blank"
-      ng-if="PLATEFORM === 'DESKTOP'"
-      href="//maps.google.com/?q={{ theater.geopoint.lat }},{{ theater.geopoint.lng }}"
-    )
-      md-icon(md-svg-icon='google-maps')
-    a.md-icon-button(
-      ng-if="PLATEFORM === 'MOBILE'"
-      href="geo:{{ theater.geopoint.lat }},{{ theater.geopoint.lng }}?q={{ theater.name }}+{{ theater.address }}+{{ theater.postalCode }}+{{ theater.city }}"
-    )
-      md-icon(md-svg-icon='google-maps')
-
-div(
-  ng-if="ready && noShowtime"
-  flex
-  layout-align="center center"
-  layout="column"
-)
-  div.text-center Ce cinéma n'enregistre pas encore ses séances...
-
-div(layout="row" layout-wrap ng-if="ready && byMovie")
   div(
-    flex-gt-lg="20" flex-lg="25" flex-md="33" flex-sm="50" flex-xs="100"
-    ng-repeat="movie in movies"
+    ng-if="ready && noShowtime"
+    flex
+    layout-align="center center"
     layout="column"
   )
-    md-card(flex="grow" layout="column" layout-align="start")
-      //- img.md-card-image(ng-src='{{ movie.poster }}', alt='movie poster' )
-      md-card-title(flex="initial" ui-sref="base.movieDetails({ movieId: movie.id })")
-        md-card-title-text
-          span.md-headline {{ movie.originalTitle }}
-          span.md-subhead {{ movie.synopsis | htmlToPlaintext }}
-      md-card-content
-        div(ng-repeat="(language, showtimesByLanguage) in groupedShowtimes[movie.id]")
-          h3 {{ language }}
-          span(ng-repeat="(day, showtimesByDay) in groupedShowtimes[movie.id][language]")
-            | {{ showtimesByDay[0].day }}: 
-            span(ng-repeat="showtimes in groupedShowtimes[movie.id][language][day]")
-              | {{ showtimes.datetime | date : "H'h'mm" }}
-              span(ng-if="!$last") , 
-            hr(ng-if="!$last")
+    div.text-center Ce cinéma n'enregistre pas encore ses séances...
 
-div(layout="column" ng-if="ready && byDate" flex="100")
-  div(ng-repeat="(day, showtimesByDay) in byDateShowtimes" flex="100")
-    .md-subhead.md-padding {{ dateTitle(day) }} {{ dateSubtitle(day) }}
-    md-expansion-panel-group
-      md-expansion-panel(ng-repeat="(movieId, showtimesByMovie) in showtimesByDay")
-        md-expansion-panel-collapsed(ng-click="$panel.expand()")
-          .md-title {{ moviesById[movieId].originalTitle }}
-          .md-summary
-            span(ng-repeat="showtime in showtimesByMovie")
-              | {{ showtime.datetime | date : "H'h'mm" }} ({{ showtime.language }})
-              span(ng-if="!$last") , 
-          md-expansion-panel-icon
-        md-expansion-panel-expanded(ng-click="$panel.collapse()")
-          md-expansion-panel-header
-            .md-title(flex="grow") {{ moviesById[movieId].originalTitle }}
-            md-expansion-panel-icon
-          md-expansion-panel-content
+  div(layout="row" layout-wrap ng-if="ready && byMovie")
+    div(
+      flex-gt-lg="20" flex-lg="25" flex-md="33" flex-sm="50" flex-xs="100"
+      ng-repeat="movie in movies"
+      layout="column"
+    )
+      md-card(flex="grow" layout="column" layout-align="start")
+        //- img.md-card-image(ng-src='{{ movie.poster }}', alt='movie poster' )
+        md-card-title(flex="initial" ui-sref="base.movieDetails({ movieId: movie.id })")
+          md-card-title-text
+            span.md-headline {{ movie.originalTitle }}
+            span.md-subhead {{ movie.synopsis | htmlToPlaintext }}
+        md-card-content
+          div(ng-repeat="(language, showtimesByLanguage) in groupedShowtimes[movie.id]")
+            h3 {{ language }}
+            span(ng-repeat="(day, showtimesByDay) in groupedShowtimes[movie.id][language]")
+              | {{ showtimesByDay[0].day }}: 
+              span(ng-repeat="showtimes in groupedShowtimes[movie.id][language][day]")
+                | {{ showtimes.datetime | date : "H'h'mm" }}
+                span(ng-if="!$last") , 
+              hr(ng-if="!$last")
+
+  div(layout="column" ng-if="ready && byDate" flex="100")
+    div(ng-repeat="(day, showtimesByDay) in byDateShowtimes" flex="100")
+      .md-subhead.md-padding {{ dateTitle(day) }} {{ dateSubtitle(day) }}
+      md-expansion-panel-group
+        md-expansion-panel(ng-repeat="(movieId, showtimesByMovie) in showtimesByDay")
+          md-expansion-panel-collapsed(ng-click="$panel.expand()")
+            .md-title {{ moviesById[movieId].originalTitle }}
             .md-summary
               span(ng-repeat="showtime in showtimesByMovie")
                 | {{ showtime.datetime | date : "H'h'mm" }} ({{ showtime.language }})
                 span(ng-if="!$last") , 
-            p {{ moviesById[movieId].synopsis | htmlToPlaintext }}
+            md-expansion-panel-icon
+          md-expansion-panel-expanded(ng-click="$panel.collapse()")
+            md-expansion-panel-header
+              .md-title(flex="grow") {{ moviesById[movieId].originalTitle }}
+              md-expansion-panel-icon
+            md-expansion-panel-content
+              .md-summary
+                span(ng-repeat="showtime in showtimesByMovie")
+                  | {{ showtime.datetime | date : "H'h'mm" }} ({{ showtime.language }})
+                  span(ng-if="!$last") , 
+              p {{ moviesById[movieId].synopsis | htmlToPlaintext }}
