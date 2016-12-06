@@ -41,9 +41,6 @@ angular.module 'Cinesponsable.movie'
     query: $stateParams.q or ''
     movies: []
 
-  $timeout ->
-    $window.document.getElementById('search').focus()
-
   changeUrl = null
   $scope.$watch 'search.query', ->
     $timeout.cancel(changeUrl)

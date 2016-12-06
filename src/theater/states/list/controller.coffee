@@ -43,8 +43,6 @@ angular.module 'Cinesponsable.theater'
 
   $scope.favorites = Favorites.get()
 
-  $timeout ->
-    $window.document.getElementById('search').focus()
   $scope.search =
     query: ''
     theaters: []
